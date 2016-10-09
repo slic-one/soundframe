@@ -1,0 +1,110 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:theme="@style/AppTheme"
+
+    android:orientation="vertical"
+    android:weightSum="0"
+    tools:context=".PlayerActivity">
+
+    <ListView
+        android:id="@+id/songListView"
+
+        android:clipToPadding="false"
+
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+    </ListView>
+
+    <LinearLayout
+        android:clipToPadding="false"
+        android:background="@color/player_background"
+        android:elevation="10dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <SeekBar
+            android:id="@+id/musicSeekBar"
+            style="@android:style/Widget.Material.SeekBar"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+
+            android:progressTint="@color/player_controls"
+            android:secondaryProgressTint="@android:color/holo_purple"
+            android:backgroundTint="@android:color/secondary_text_dark" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:clipToPadding="false"
+        android:background="@color/player_background"
+        android:elevation="10dp"
+
+        style="?android:buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <Button
+            style="?android:buttonBarButtonStyle"
+            android:id="@+id/btnPrev"
+            android:layout_width="64dp"
+
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:background="@drawable/ic_skip_previous_24dp"
+            android:backgroundTint="@color/player_controls"
+            android:elevation="10dp"
+
+            android:onClick="previousTrack" />
+
+        <Button
+            android:id="@+id/btnPlay"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+
+            android:layout_gravity="center"
+            android:background="@drawable/ic_play_circle_fill_24dp"
+            android:backgroundTint="@color/player_controls"
+            android:elevation="10sp"
+
+            android:onClick="playMusic"
+
+            android:visibility="visible" />
+
+        <Button
+            style="?android:buttonBarButtonStyle"
+            android:id="@+id/btnPause"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+
+            android:layout_gravity="center"
+            android:background="@drawable/ic_pause_circle_fill_24dp"
+            android:backgroundTint="@color/player_controls"
+            android:elevation="10dp"
+
+            android:onClick="pauseMusic"
+
+            android:visibility="gone" />
+
+        <Button
+            style="?android:buttonBarButtonStyle"
+            android:id="@+id/btnNext"
+            android:layout_width="64dp"
+
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:background="@drawable/ic_skip_next_24dp"
+            android:backgroundTint="@color/player_controls"
+            android:elevation="10dp"
+
+            android:onClick="nextTrack" />
+    </LinearLayout>
+</LinearLayout>

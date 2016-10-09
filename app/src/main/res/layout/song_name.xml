@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/songNameLine"
+    android:layout_height="32dp"
+
+    android:elevation="5dp"
+
+    android:textSize="16sp"
+    android:singleLine="true"
+
+    android:paddingStart="10dp"
+    android:paddingEnd="1dp"
+    android:layout_marginBottom="10dp"
+    android:clickable="true"
+    android:onClick="songSelected"/>
