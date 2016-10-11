@@ -1,11 +1,17 @@
 package com.silentslic.soundframe;
 
 import android.app.Activity;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.PowerManager;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,7 +25,49 @@ import java.util.List;
 
 public class PlayerActivity extends Activity {
 
-    MediaPlayer player;
+    public class PlayerService extends Service implements AudioManager.OnAudioFocusChangeListener {
+        @Override
+        public int onStartCommand(Intent intent, int flags, int startId) {
+            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN);
+
+            if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                Log.e("AUDIOFOCUS", "could not get audio focus.");
+            }
+            return super.onStartCommand(intent, flags, startId);
+        }
+
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            switch(focusChange) {
+                case AudioManager.AUDIOFOCUS_GAIN:
+                    // resume playback
+                    if (player == null) initializePlayer();
+                    else if (!player.isPlaying()) player.start();
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS:
+                    // Lost focus for an unbounded amount of time: stop playback and release media player
+                    if(player.isPlaying()) player.stop();
+                    player.release();
+                    player = null;
+                    break;
+                case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
+                    // Lost focus for a short time, but we have to stop playback
+                    if(player.isPlaying()) player.pause();
+                    break;
+            }
+        }
+
+        @Nullable
+        @Override
+        public IBinder onBind(Intent intent) {
+            return null;
+        }
+    }
+
+
+    public MediaPlayer player;
 
     ArrayList<String> songNameList;
     ArrayList<String> songPathList;
@@ -32,13 +80,17 @@ public class PlayerActivity extends Activity {
     Uri currentSongPath;
     int i = 0;
 
+    // TODO notification
+
+    // TODO fix rotation
+    //calls onCreate and onResume methods
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
-        player = new MediaPlayer();
-        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        initializePlayer();
 
         songNameList = new ArrayList<>();
         songPathList = new ArrayList<>();
@@ -53,7 +105,8 @@ public class PlayerActivity extends Activity {
 //        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 //            @Override
 //            public void onPrepared(MediaPlayer mp) {
-//                mp.start();
+//                if (mp != null)
+//                    mp.start();
 //            }
 //        });
 
@@ -71,9 +124,17 @@ public class PlayerActivity extends Activity {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
             Log.e("player", "" + ex.getMessage());
         }
+
+        Intent intent = new Intent(this, PlayerService.class);
+        startService(intent);
     }
 
     // TODO seekbar, select song from list
+
+    public void initializePlayer() {
+        player = new MediaPlayer();
+        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+    }
 
     public void initializeButtons() {
 
@@ -108,12 +169,12 @@ public class PlayerActivity extends Activity {
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         if (player != null) {
             player.release();
             player = null;
         }
-        super.onStop();
+        super.onDestroy();
     }
 
     public void getAllSongs() {
@@ -132,9 +193,11 @@ public class PlayerActivity extends Activity {
                         continue;
 
                     int song_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+                    //Log.i("Duration", String.valueOf(song_id));
 
                     String fullpath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
                     String Duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+                    //Log.i("Duration", Duration);
 
                     songNameList.add(songName);
                     songPathList.add(fullpath);
@@ -147,9 +210,12 @@ public class PlayerActivity extends Activity {
     }
 
     public void initializeMusicList() {
-        ((ListView)findViewById(R.id.songListView)).setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, songNameList));
+        ((ListView)findViewById(R.id.songListView)).setAdapter(new ArrayAdapter<>(this, R.layout.song_name, songNameList));
     }
 
+    public void songSelected(View view) {
+        Toast.makeText(this, "Some song selected", Toast.LENGTH_LONG).show();
+    }
 
     //TODO better button icon switch
     public void playMusic(View view){

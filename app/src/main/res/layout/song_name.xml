@@ -13,4 +13,9 @@
     android:paddingEnd="1dp"
     android:layout_marginBottom="10dp"
     android:clickable="true"
-    android:onClick="songSelected"/>
+    android:onClick="songSelected"
+    android:fontFamily="serif-monospace"
+    android:text="The Sample Text "
+    android:textColor="@android:color/holo_green_dark"
+    android:layout_marginTop="5dp"
+    android:paddingTop="5dp" />

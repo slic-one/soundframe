@@ -59,7 +59,7 @@
             android:layout_gravity="center"
 
             android:background="@drawable/ic_skip_previous_24dp"
-            android:backgroundTint="@color/player_controls"
+            android:backgroundTint="#cccccc"
             android:elevation="10dp"
 
             android:onClick="previousTrack" />
@@ -71,7 +71,7 @@
 
             android:layout_gravity="center"
             android:background="@drawable/ic_play_circle_fill_24dp"
-            android:backgroundTint="@color/player_controls"
+            android:backgroundTint="#cccccc"
             android:elevation="10sp"
 
             android:onClick="playMusic"
@@ -102,7 +102,7 @@
             android:layout_gravity="center"
 
             android:background="@drawable/ic_skip_next_24dp"
-            android:backgroundTint="@color/player_controls"
+            android:backgroundTint="#cccccc"
             android:elevation="10dp"
 
             android:onClick="nextTrack" />
