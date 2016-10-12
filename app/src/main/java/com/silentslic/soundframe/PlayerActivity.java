@@ -11,13 +11,17 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.database.Cursor;
 
@@ -68,10 +72,38 @@ public class PlayerActivity extends Activity {
     }
 
 
+    public class SongsAdapter extends ArrayAdapter<Song> {
+
+        SongsAdapter(Context context, ArrayList<Song> songs) {
+            super(context, 0, songs);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            // Get the data item for this position
+            Song song = getItem(position);
+
+            // Check if an existing view is being reused, otherwise inflate the view
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.song_name, parent, false);
+            }
+
+            TextView songName = (TextView) convertView.findViewById(R.id.songNameLine);
+            songName.setText(song.getName());
+            songName.setTag(song.getPath());
+
+            return convertView;
+        }
+    }
+
+
     public MediaPlayer player;
 
-    ArrayList<String> songNameList;
-    ArrayList<String> songPathList;
+    ArrayList<Song> songList;
+
+    View songView;
 
     Button play;
     Button pause;
@@ -95,15 +127,14 @@ public class PlayerActivity extends Activity {
 
         initializePlayer();
 
-        songNameList = new ArrayList<>();
-        songPathList = new ArrayList<>();
+        songList = new ArrayList<>();
 
         getAllSongs();
         initializeMusicList();
 
         initializeButtons();
 
-        currentSongPath = Uri.parse(songPathList.get(i));
+        currentSongPath = Uri.parse(songList.get(i).getPath());
 
 //        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 //            @Override
@@ -201,11 +232,10 @@ public class PlayerActivity extends Activity {
                     //Log.i("Duration", String.valueOf(song_id));
 
                     String fullpath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-                    String Duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+                    String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
                     //Log.i("Duration", Duration);
 
-                    songNameList.add(songName);
-                    songPathList.add(fullpath);
+                    songList.add(new Song(song_id, songName, fullpath, duration));
 
                 } while (cursor.moveToNext());
 
@@ -215,11 +245,19 @@ public class PlayerActivity extends Activity {
     }
 
     public void initializeMusicList() {
-        ((ListView)findViewById(R.id.songListView)).setAdapter(new ArrayAdapter<>(this, R.layout.song_name, songNameList));
+        ((ListView)findViewById(R.id.songListView)).setAdapter(new SongsAdapter(this, songList));
     }
 
     public void songSelected(View view) {
-        Toast.makeText(this, "Some song selected", Toast.LENGTH_LONG).show();
+        if (songView != null)
+            songView.setBackgroundColor(0);
+        songView = view;
+
+        i = ((ListView)findViewById(R.id.songListView)).getPositionForView(view);
+        Log.i("Index", String.valueOf(i));
+
+        currentSongPath = Uri.parse(String.valueOf(view.getTag()));
+        playSong(currentSongPath);
     }
 
     //TODO better button icon switch
@@ -236,24 +274,24 @@ public class PlayerActivity extends Activity {
     }
 
     public void nextTrack(View view){
-        if (++i >= songPathList.size())
+        if (++i >= songList.size())
             i = 0;
 
-        currentSongPath = Uri.parse(songPathList.get(i));
+        currentSongPath = Uri.parse(songList.get(i).getPath());
         playSong(currentSongPath);
     }
 
     public void previousTrack(View view){
-        if (--i <= 1)
-            i = songPathList.size() - 1;
+        if (--i <= -1)
+            i = songList.size() - 1;
 
-        currentSongPath = Uri.parse(songPathList.get(i));
+        currentSongPath = Uri.parse(songList.get(i).getPath());
         playSong(currentSongPath);
     }
 
     public void playSong(Uri songPath) {
 
-        
+        songView.setBackgroundColor(getResources().getColor(R.color.selected_song));
 
         try {
             player.reset();

@@ -13,7 +13,10 @@ public class Song {
 
     public Song(int id, String name, String path, String duration) {
         Id = id;
-        Name = name;
+        if (name == null)
+            Name = "[no name]";
+        else
+            Name = name;
         Path = path;
         Duration = duration;
     }
@@ -32,5 +35,10 @@ public class Song {
 
     public int getId() {
         return Id;
+    }
+
+    @Override
+    public String toString() {
+        return Name;
     }
 }

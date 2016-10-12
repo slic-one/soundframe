@@ -9,6 +9,8 @@
     android:textSize="16sp"
     android:singleLine="true"
 
+    android:backgroundTintMode="add"
+
     android:paddingStart="10dp"
     android:paddingEnd="1dp"
     android:layout_marginBottom="10dp"
