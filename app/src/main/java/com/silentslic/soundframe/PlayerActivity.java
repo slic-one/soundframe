@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import android.database.Cursor;
 
@@ -76,6 +77,8 @@ public class PlayerActivity extends Activity {
     Button pause;
     Button next;
     Button prev;
+
+    SeekBar songSeekBar;
 
     Uri currentSongPath;
     int i = 0;
@@ -166,6 +169,8 @@ public class PlayerActivity extends Activity {
                 previousTrack(prev);
             }
         });
+
+        songSeekBar = (SeekBar) findViewById(R.id.songSeekBar);
     }
 
     @Override
@@ -231,31 +236,28 @@ public class PlayerActivity extends Activity {
     }
 
     public void nextTrack(View view){
-        if (++i >= songPathList.size() - 1)
+        if (++i >= songPathList.size())
             i = 0;
 
         currentSongPath = Uri.parse(songPathList.get(i));
-        try {
-            player.reset();
-            player.setDataSource(getApplicationContext(), currentSongPath);
-            player.prepare();
-            player.start();
-        }
-        catch (Exception ex) {
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
-            Log.e("player", " i is " + i + " " + ex.getMessage());
-            Log.i("currentSongPath", currentSongPath.toString());
-        }
+        playSong(currentSongPath);
     }
 
     public void previousTrack(View view){
-        if (--i <= 0)
+        if (--i <= 1)
             i = songPathList.size() - 1;
 
         currentSongPath = Uri.parse(songPathList.get(i));
+        playSong(currentSongPath);
+    }
+
+    public void playSong(Uri songPath) {
+
+        
+
         try {
             player.reset();
-            player.setDataSource(getApplicationContext(), currentSongPath);
+            player.setDataSource(getApplicationContext(), songPath);
             player.prepare();
             player.start();
         }
