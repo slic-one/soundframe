@@ -9,7 +9,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,7 +25,6 @@ import android.widget.Toast;
 import android.database.Cursor;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PlayerActivity extends Activity {
 
@@ -71,42 +69,13 @@ public class PlayerActivity extends Activity {
         }
     }
 
-
-    public class SongsAdapter extends ArrayAdapter<Song> {
-
-        SongsAdapter(Context context, ArrayList<Song> songs) {
-            super(context, 0, songs);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            // Get the data item for this position
-            Song song = getItem(position);
-
-            // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.song_name, parent, false);
-            }
-
-            TextView songName = (TextView) convertView.findViewById(R.id.songNameLine);
-            songName.setText(song.getName());
-            songName.setTag(song.getPath());
-
-            return convertView;
-        }
-    }
-
-
-    public MediaPlayer player;
+    static MediaPlayer player = null;
 
     ArrayList<Song> songList;
 
     View songView;
 
     Button play;
-    Button pause;
     Button next;
     Button prev;
 
@@ -115,59 +84,49 @@ public class PlayerActivity extends Activity {
     Uri currentSongPath;
     int i = 0;
 
-    // TODO notification
-
-    // TODO fix rotation
-    //calls onCreate and onResume methods
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
+        songList = readStorageForMusic();
+
         initializePlayer();
-
-        songList = new ArrayList<>();
-
-        getAllSongs();
         initializeMusicList();
-
         initializeButtons();
-
-        currentSongPath = Uri.parse(songList.get(i).getPath());
-
-//        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//            @Override
-//            public void onPrepared(MediaPlayer mp) {
-//                if (mp != null)
-//                    mp.start();
-//            }
-//        });
-
-        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            public void onCompletion(MediaPlayer mp) {
-                nextTrack(next);
-            }
-        });
-
-        try {
-            player.setDataSource(getApplicationContext(), currentSongPath);
-            player.prepare();
-        }
-        catch (Exception ex) {
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
-            Log.e("player", "" + ex.getMessage());
-        }
-
-        Intent intent = new Intent(this, PlayerService.class);
-        startService(intent);
     }
 
-    // TODO seekbar, select song from list
+    @Override
+    protected void onDestroy() {
+        if (player != null) {
+            player.release();
+            player = null;
+        }
+        super.onDestroy();
+    }
 
     public void initializePlayer() {
-        player = new MediaPlayer();
-        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        if (player == null) {
+            player = new MediaPlayer();
+            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    nextTrack(next);
+                }
+            });
+
+            currentSongPath = Uri.parse(songList.get(i).getPath());
+
+            // service for background playback
+            Intent intent = new Intent(this, PlayerService.class);
+            startService(intent);
+        }
+    }
+
+    public void initializeMusicList() {
+        ((ListView)findViewById(R.id.songListView)).setAdapter(new SongsAdapter(this, songList));
+        ((ListView)findViewById(R.id.songListView)).setSelector(R.drawable.spng_selector);
     }
 
     public void initializeButtons() {
@@ -177,13 +136,6 @@ public class PlayerActivity extends Activity {
             @Override
             public void onClick(View v) {
                 playMusic(play);
-            }
-        });
-        pause = (Button)findViewById(R.id.btnPause);
-        pause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pauseMusic(pause);
             }
         });
         next = (Button)findViewById(R.id.btnNext);
@@ -204,16 +156,8 @@ public class PlayerActivity extends Activity {
         songSeekBar = (SeekBar) findViewById(R.id.songSeekBar);
     }
 
-    @Override
-    protected void onDestroy() {
-        if (player != null) {
-            player.release();
-            player = null;
-        }
-        super.onDestroy();
-    }
-
-    public void getAllSongs() {
+    public ArrayList<Song> readStorageForMusic() {
+        ArrayList<Song> list = new ArrayList<>();
 
         Uri allsongsuri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
@@ -229,87 +173,72 @@ public class PlayerActivity extends Activity {
                         continue;
 
                     int song_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-                    //Log.i("Duration", String.valueOf(song_id));
 
                     String fullpath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
                     String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-                    //Log.i("Duration", Duration);
 
-                    songList.add(new Song(song_id, songName, fullpath, duration));
+                    list.add(new Song(song_id, songName, fullpath, duration));
 
                 } while (cursor.moveToNext());
 
             }
             cursor.close();
         }
-    }
-
-    public void initializeMusicList() {
-        ((ListView)findViewById(R.id.songListView)).setAdapter(new SongsAdapter(this, songList));
+        return list;
     }
 
     public void songSelected(View view) {
-        if (songView != null)
-            songView.setBackgroundColor(0);
+        // reset background before setting new one
+        if (songView != null) {
+            //songView.setBackground(null);
+        }
         songView = view;
 
         i = ((ListView)findViewById(R.id.songListView)).getPositionForView(view);
-        Log.i("Index", String.valueOf(i));
 
         currentSongPath = Uri.parse(String.valueOf(view.getTag()));
         playSong(currentSongPath);
     }
 
-    //TODO better button icon switch
     public void playMusic(View view){
-        player.start();
-        play.setVisibility(View.GONE);
-        pause.setVisibility(View.VISIBLE);
-    }
 
-    public void pauseMusic(View view){
-        player.pause();
-        pause.setVisibility(View.GONE);
-        play.setVisibility(View.VISIBLE);
+        if (player.isPlaying()) {
+            player.pause();
+            play.setBackground(getDrawable(R.drawable.ic_play_circle_fill_24dp));
+        }
+        else {
+            playSong(currentSongPath);
+        }
     }
 
     public void nextTrack(View view){
         if (++i >= songList.size())
             i = 0;
 
-        currentSongPath = Uri.parse(songList.get(i).getPath());
-        playSong(currentSongPath);
+        songSelected(((ListView)findViewById(R.id.songListView)).getChildAt(i));
     }
 
     public void previousTrack(View view){
         if (--i <= -1)
             i = songList.size() - 1;
 
-        currentSongPath = Uri.parse(songList.get(i).getPath());
-        playSong(currentSongPath);
+        songSelected(((ListView)findViewById(R.id.songListView)).getChildAt(i));
     }
 
     public void playSong(Uri songPath) {
 
-        songView.setBackgroundColor(getResources().getColor(R.color.selected_song));
+        //songView.setBackgroundColor(getResources().getColor(R.color.selected_song_background));
 
         try {
             player.reset();
             player.setDataSource(getApplicationContext(), songPath);
             player.prepare();
             player.start();
+            play.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
         }
         catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
             Log.e("player", " i is " + i + " " + ex.getMessage());
         }
     }
-
-
-    /*
-        http://developer.android.com/guide/topics/media/mediaplayer.html
-        http://code.tutsplus.com/tutorials/create-a-music-player-on-android-project-setup--mobile-22764
-        http://code.tutsplus.com/tutorials/create-a-music-player-on-android-song-playback--mobile-22778
-        http://code.tutsplus.com/tutorials/create-a-music-player-on-android-user-controls--mobile-22787
-    */
 }

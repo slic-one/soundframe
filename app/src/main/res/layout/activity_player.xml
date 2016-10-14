@@ -4,6 +4,8 @@
     android:layout_height="fill_parent"
     android:theme="@style/AppTheme"
 
+    android:background="?android:attr/activatedBackgroundIndicator"
+
     android:orientation="vertical"
     android:weightSum="0"
     tools:context=".PlayerActivity">
@@ -13,10 +15,13 @@
 
         android:clipToPadding="false"
 
+        android:choiceMode="singleChoice"
+
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        style="@style/Widget.AppCompat.ListView">
     </ListView>
 
     <LinearLayout
@@ -27,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <SeekBar
+            android:elevation="4dp"
             android:id="@+id/songSeekBar"
             style="@android:style/Widget.Material.SeekBar"
             android:layout_width="fill_parent"
@@ -78,20 +84,6 @@
 
             android:visibility="visible" />
 
-        <Button
-            style="?android:buttonBarButtonStyle"
-            android:id="@+id/btnPause"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-
-            android:layout_gravity="center"
-            android:background="@drawable/ic_pause_circle_fill_24dp"
-            android:backgroundTint="@color/player_controls"
-            android:elevation="10dp"
-
-            android:onClick="pauseMusic"
-
-            android:visibility="gone" />
 
         <Button
             style="?android:buttonBarButtonStyle"
