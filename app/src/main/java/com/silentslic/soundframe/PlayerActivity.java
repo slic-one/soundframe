@@ -4,27 +4,26 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.database.Cursor;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PlayerActivity extends Activity {
 
@@ -75,6 +74,8 @@ public class PlayerActivity extends Activity {
 
     View songView;
 
+    ListView songsListView;
+
     Button play;
     Button next;
     Button prev;
@@ -84,6 +85,7 @@ public class PlayerActivity extends Activity {
     Uri currentSongPath;
     int i = 0;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,9 +93,25 @@ public class PlayerActivity extends Activity {
 
         songList = readStorageForMusic();
 
+        Log.i("songList size", String.valueOf(songList.size()));
+
         initializePlayer();
         initializeMusicList();
         initializeButtons();
+
+        final Handler handler = new Handler();
+        PlayerActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (player.isPlaying()) {
+                    songSeekBar.setProgress(player.getCurrentPosition() / 1000);
+
+                    Log.i("progress", String.valueOf(player.getCurrentPosition() / 1000));
+                }
+                handler.postDelayed(this, 1000);
+
+            }
+        });
     }
 
     @Override
@@ -125,8 +143,9 @@ public class PlayerActivity extends Activity {
     }
 
     public void initializeMusicList() {
-        ((ListView)findViewById(R.id.songListView)).setAdapter(new SongsAdapter(this, songList));
-        ((ListView)findViewById(R.id.songListView)).setSelector(R.drawable.spng_selector);
+        songsListView = ((ListView)findViewById(R.id.songListView));
+        songsListView.setAdapter(new SongsAdapter(this, songList));
+        songsListView.setSelector(R.drawable.spng_selector);
     }
 
     public void initializeButtons() {
@@ -154,6 +173,25 @@ public class PlayerActivity extends Activity {
         });
 
         songSeekBar = (SeekBar) findViewById(R.id.songSeekBar);
+
+        songSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (player != null && !player.isPlaying()) {
+                    player.seekTo(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     public ArrayList<Song> readStorageForMusic() {
@@ -192,12 +230,19 @@ public class PlayerActivity extends Activity {
         if (songView != null) {
             //songView.setBackground(null);
         }
-        songView = view;
+        try {
+            songView = view;
 
-        i = ((ListView)findViewById(R.id.songListView)).getPositionForView(view);
+            i = songsListView.getPositionForView(view);
 
-        currentSongPath = Uri.parse(String.valueOf(view.getTag()));
-        playSong(currentSongPath);
+            currentSongPath = Uri.parse(String.valueOf(view.getTag()));
+            player.reset();
+            playSong(currentSongPath);
+        }
+        catch (Exception ex) {
+            Log.i("i", String.valueOf(i));
+            ex.printStackTrace();
+        }
     }
 
     public void playMusic(View view){
@@ -207,22 +252,44 @@ public class PlayerActivity extends Activity {
             play.setBackground(getDrawable(R.drawable.ic_play_circle_fill_24dp));
         }
         else {
-            playSong(currentSongPath);
+            player.start();
+            play.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
+        }
+    }
+
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
         }
     }
 
     public void nextTrack(View view){
-        if (++i >= songList.size())
+        i++;
+        if (i >= songList.size() - 1)
             i = 0;
 
-        songSelected(((ListView)findViewById(R.id.songListView)).getChildAt(i));
+        //songsListView.smoothScrollToPosition(i);
+        songsListView.setSelection(i);
+        songsListView.scrollTo(0, i+1);
+
+        songSelected(getViewByPosition(i, songsListView));
     }
 
     public void previousTrack(View view){
-        if (--i <= -1)
+        i--;
+        if (i <= 0)
             i = songList.size() - 1;
 
-        songSelected(((ListView)findViewById(R.id.songListView)).getChildAt(i));
+        songsListView.setSelection(i - 1);
+        songsListView.scrollTo(0, i - 1);
+
+        songSelected(getViewByPosition(i, songsListView));
     }
 
     public void playSong(Uri songPath) {
@@ -233,7 +300,13 @@ public class PlayerActivity extends Activity {
             player.reset();
             player.setDataSource(getApplicationContext(), songPath);
             player.prepare();
+
+            songSeekBar.setMax(player.getDuration() / 1000);
+            Log.i("setMax", String.valueOf(songSeekBar.getMax()));
+            songSeekBar.setProgress(0);
+
             player.start();
+
             play.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
         }
         catch (Exception ex) {
