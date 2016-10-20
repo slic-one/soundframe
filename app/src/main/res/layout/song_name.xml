@@ -6,9 +6,10 @@
     android:id="@+id/songNameLine"
 
     android:text="The Sample - Text"
-    android:fontFamily="serif-monospace"
     android:textColor="@color/song_text"
     android:textSize="16sp"
+
+    android:fontFamily="serif-monospace"
 
     android:singleLine="true"
 

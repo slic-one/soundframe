@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.silentslic.stufftodo.MainActivity">
+
+    <item android:id="@+id/action_refresh_list"
+          android:title="Refresh list"
+          app:showAsAction="never"/>
+</menu>

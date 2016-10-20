@@ -8,13 +8,16 @@ import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -22,10 +25,8 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class PlayerActivity extends Activity {
+public class PlayerActivity extends AppCompatActivity {
 
     public class PlayerService extends Service implements AudioManager.OnAudioFocusChangeListener {
         @Override
@@ -103,15 +104,31 @@ public class PlayerActivity extends Activity {
         PlayerActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (player.isPlaying()) {
+                if (player != null && player.isPlaying()) {
                     songSeekBar.setProgress(player.getCurrentPosition() / 1000);
-
-                    Log.i("progress", String.valueOf(player.getCurrentPosition() / 1000));
                 }
                 handler.postDelayed(this, 1000);
-
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.app_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh_list:
+                readStorageForMusic();
+                return true;
+            default:
+                // Invoke the superclass to handle unrecognized action.
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -145,7 +162,6 @@ public class PlayerActivity extends Activity {
     public void initializeMusicList() {
         songsListView = ((ListView)findViewById(R.id.songListView));
         songsListView.setAdapter(new SongsAdapter(this, songList));
-        songsListView.setSelector(R.drawable.spng_selector);
     }
 
     public void initializeButtons() {
@@ -175,16 +191,26 @@ public class PlayerActivity extends Activity {
         songSeekBar = (SeekBar) findViewById(R.id.songSeekBar);
 
         songSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            boolean wasPlaying = false;
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (player != null && !player.isPlaying()) {
-                    player.seekTo(progress);
+                    player.seekTo(progress * 1000);
+                    if (wasPlaying)
+                        player.start();
                 }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                if (player.isPlaying()) {
+                    wasPlaying = true;
+                    player.pause();
+                }
+                else {
+                    wasPlaying = false;
+                }
             }
 
             @Override
@@ -231,12 +257,19 @@ public class PlayerActivity extends Activity {
             //songView.setBackground(null);
         }
         try {
+            songList.get(i).isSelected = false;
+            songsListView.getAdapter().getView(i, songView, songsListView);
+
             songView = view;
 
             i = songsListView.getPositionForView(view);
 
+            songList.get(i).isSelected = true;
+            songsListView.getAdapter().getView(i, songView, songsListView);
+
             currentSongPath = Uri.parse(String.valueOf(view.getTag()));
             player.reset();
+            songSeekBar.setProgress(0);
             playSong(currentSongPath);
         }
         catch (Exception ex) {
@@ -270,26 +303,28 @@ public class PlayerActivity extends Activity {
     }
 
     public void nextTrack(View view){
-        i++;
-        if (i >= songList.size() - 1)
-            i = 0;
+//        i++;
+//        if (i >= songList.size() - 1)
+//            i = 0;
 
         //songsListView.smoothScrollToPosition(i);
         songsListView.setSelection(i);
         songsListView.scrollTo(0, i+1);
 
-        songSelected(getViewByPosition(i, songsListView));
+        songSeekBar.setProgress(0);
+        songSelected(getViewByPosition(i+1, songsListView));
     }
 
     public void previousTrack(View view){
-        i--;
-        if (i <= 0)
-            i = songList.size() - 1;
+//        i--;
+//        if (i <= 0)
+//            i = songList.size() - 1;
 
+        songsListView.scrollTo(0, i - 2);
         songsListView.setSelection(i - 1);
-        songsListView.scrollTo(0, i - 1);
 
-        songSelected(getViewByPosition(i, songsListView));
+        songSeekBar.setProgress(0);
+        songSelected(getViewByPosition(i-1, songsListView));
     }
 
     public void playSong(Uri songPath) {
@@ -302,8 +337,6 @@ public class PlayerActivity extends Activity {
             player.prepare();
 
             songSeekBar.setMax(player.getDuration() / 1000);
-            Log.i("setMax", String.valueOf(songSeekBar.getMax()));
-            songSeekBar.setProgress(0);
 
             player.start();
 

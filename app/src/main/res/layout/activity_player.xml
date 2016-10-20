@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:theme="@style/AppTheme"
 
-    android:background="?android:attr/activatedBackgroundIndicator"
+    android:background="@color/player_background"
 
     android:orientation="vertical"
     android:weightSum="0"

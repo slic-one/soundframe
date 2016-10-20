@@ -1,7 +1,9 @@
 package com.silentslic.soundframe;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,16 @@ class SongsAdapter extends ArrayAdapter<Song> {
         TextView songName = (TextView) convertView.findViewById(R.id.songNameLine);
         songName.setText(song.getName());
         songName.setTag(song.getPath());
+
+        songName.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/minisystem.ttf"));
+
+        if (song.isSelected) {
+            songName.setBackgroundColor(getContext().getResources().getColor(R.color.selected_song_background));
+        } else {
+            songName.setBackgroundColor(getContext().getResources().getColor(R.color.player_background));
+        }
+
+        Log.i("getView", String.valueOf(position));
 
         return convertView;
     }
