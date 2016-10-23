@@ -1,6 +1,6 @@
 package com.silentslic.soundframe;
 
-import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -81,6 +82,9 @@ public class PlayerActivity extends AppCompatActivity {
     Button next;
     Button prev;
 
+    TextView songDurationTextView;
+    TextView songProgressTextView;
+
     SeekBar songSeekBar;
 
     Uri currentSongPath;
@@ -106,6 +110,48 @@ public class PlayerActivity extends AppCompatActivity {
             public void run() {
                 if (player != null && player.isPlaying()) {
                     songSeekBar.setProgress(player.getCurrentPosition() / 1000);
+
+                    // TODO test performance, optimize if needed
+
+                    String time;
+
+                    int minutes = ((player.getCurrentPosition() / (1000 * 60)) % 60);
+                    int seconds = ((player.getCurrentPosition() / 1000) % 60);
+
+
+//                    String minutesStr;
+//                    if (minutes < 10)
+//                        minutesStr = "0"+minutes;
+//                    else
+//                        minutesStr = String.valueOf(minutes);
+//
+
+//                    String secondsStr;
+//                    if (seconds < 10)
+//                        secondsStr = "0"+seconds;
+//                    else
+//                        secondsStr = String.valueOf(seconds);
+
+                    if (minutes < 10) {
+                        if (seconds < 10) {
+                            time = "0"+minutes + ":" + "0" + seconds;
+                        }
+                        else  {
+                            time = "0"+minutes + ":" + seconds;
+                        }
+                    }
+                    else {
+                        if (seconds < 10) {
+                            time = minutes + ":" + "0" + seconds;
+                        }
+                        else {
+                            time = minutes + ":" + seconds;
+                        }
+                    }
+
+                    //String time = String.valueOf((player.getCurrentPosition() / (1000 * 60)) % 60) + ":" + String.valueOf((player.getCurrentPosition() / 1000) % 60);
+                    //String time = minutesStr + ":" + secondsStr;
+                    songProgressTextView.setText(time);
                 }
                 handler.postDelayed(this, 1000);
             }
@@ -188,6 +234,9 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
 
+        songDurationTextView = (TextView) findViewById(R.id.songDurationTextView);
+        songProgressTextView = (TextView) findViewById(R.id.songProgressTextView);
+
         songSeekBar = (SeekBar) findViewById(R.id.songSeekBar);
 
         songSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -252,10 +301,6 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     public void songSelected(View view) {
-        // reset background before setting new one
-        if (songView != null) {
-            //songView.setBackground(null);
-        }
         try {
             songList.get(i).isSelected = false;
             songsListView.getAdapter().getView(i, songView, songsListView);
@@ -303,11 +348,6 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     public void nextTrack(View view){
-//        i++;
-//        if (i >= songList.size() - 1)
-//            i = 0;
-
-        //songsListView.smoothScrollToPosition(i);
         songsListView.setSelection(i);
         songsListView.scrollTo(0, i+1);
 
@@ -316,27 +356,42 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     public void previousTrack(View view){
-//        i--;
-//        if (i <= 0)
-//            i = songList.size() - 1;
-
         songsListView.scrollTo(0, i - 2);
-        songsListView.setSelection(i - 1);
+        songsListView.setSelection(i - 2);
 
         songSeekBar.setProgress(0);
         songSelected(getViewByPosition(i-1, songsListView));
     }
 
     public void playSong(Uri songPath) {
-
-        //songView.setBackgroundColor(getResources().getColor(R.color.selected_song_background));
-
         try {
             player.reset();
             player.setDataSource(getApplicationContext(), songPath);
             player.prepare();
 
             songSeekBar.setMax(player.getDuration() / 1000);
+
+            // formatted duration of song for textView
+            String time;
+            int minutes = ((player.getDuration() / (1000 * 60)) % 60);
+            int seconds = ((player.getDuration() / 1000) % 60);
+            if (minutes < 10) {
+                if (seconds < 10) {
+                    time = "0"+minutes + ":" + "0" + seconds;
+                }
+                else  {
+                    time = "0"+minutes + ":" + seconds;
+                }
+            }
+            else {
+                if (seconds < 10) {
+                    time = minutes + ":" + "0" + seconds;
+                }
+                else {
+                    time = minutes + ":" + seconds;
+                }
+            }
+            songDurationTextView.setText(time);
 
             player.start();
 
