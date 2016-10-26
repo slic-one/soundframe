@@ -1,8 +1,5 @@
 package com.silentslic.soundframe;
 
-import android.support.annotation.Nullable;
-import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.AudioManager;
@@ -10,9 +7,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.provider.MediaStore;
-import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -29,58 +24,16 @@ import java.util.ArrayList;
 
 public class PlayerActivity extends AppCompatActivity {
 
-    public class PlayerService extends Service implements AudioManager.OnAudioFocusChangeListener {
-        @Override
-        public int onStartCommand(Intent intent, int flags, int startId) {
-            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-            int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
-                    AudioManager.AUDIOFOCUS_GAIN);
-
-            if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                Log.e("AUDIOFOCUS", "could not get audio focus.");
-            }
-            return super.onStartCommand(intent, flags, startId);
-        }
-
-        @Override
-        public void onAudioFocusChange(int focusChange) {
-            switch(focusChange) {
-                case AudioManager.AUDIOFOCUS_GAIN:
-                    // resume playback
-                    if (player == null) initializePlayer();
-                    else if (!player.isPlaying()) player.start();
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS:
-                    // Lost focus for an unbounded amount of time: stop playback and release media player
-                    if(player.isPlaying()) player.stop();
-                    player.release();
-                    player = null;
-                    break;
-                case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
-                    // Lost focus for a short time, but we have to stop playback
-                    if(player.isPlaying()) player.pause();
-                    break;
-            }
-        }
-
-        @Nullable
-        @Override
-        public IBinder onBind(Intent intent) {
-            return null;
-        }
-    }
-
-    static MediaPlayer player = null;
+    public static MediaPlayer player = null;
 
     ArrayList<Song> songList;
 
+    // used for highlighting selected ListView item
     View songView;
 
     ListView songsListView;
 
-    Button play;
-    Button next;
-    Button prev;
+    Button playbackButton;
 
     TextView songDurationTextView;
     TextView songProgressTextView;
@@ -90,72 +43,20 @@ public class PlayerActivity extends AppCompatActivity {
     Uri currentSongPath;
     int i = 0;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
-        songList = readStorageForMusic();
+        if (songList == null)
+            songList = readStorageForMusic();
 
         Log.i("songList size", String.valueOf(songList.size()));
 
         initializePlayer();
         initializeMusicList();
         initializeButtons();
-
-        final Handler handler = new Handler();
-        PlayerActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (player != null && player.isPlaying()) {
-                    songSeekBar.setProgress(player.getCurrentPosition() / 1000);
-
-                    // TODO test performance, optimize if needed
-
-                    String time;
-
-                    int minutes = ((player.getCurrentPosition() / (1000 * 60)) % 60);
-                    int seconds = ((player.getCurrentPosition() / 1000) % 60);
-
-
-//                    String minutesStr;
-//                    if (minutes < 10)
-//                        minutesStr = "0"+minutes;
-//                    else
-//                        minutesStr = String.valueOf(minutes);
-//
-
-//                    String secondsStr;
-//                    if (seconds < 10)
-//                        secondsStr = "0"+seconds;
-//                    else
-//                        secondsStr = String.valueOf(seconds);
-
-                    if (minutes < 10) {
-                        if (seconds < 10) {
-                            time = "0"+minutes + ":" + "0" + seconds;
-                        }
-                        else  {
-                            time = "0"+minutes + ":" + seconds;
-                        }
-                    }
-                    else {
-                        if (seconds < 10) {
-                            time = minutes + ":" + "0" + seconds;
-                        }
-                        else {
-                            time = minutes + ":" + seconds;
-                        }
-                    }
-
-                    //String time = String.valueOf((player.getCurrentPosition() / (1000 * 60)) % 60) + ":" + String.valueOf((player.getCurrentPosition() / 1000) % 60);
-                    //String time = minutesStr + ":" + secondsStr;
-                    songProgressTextView.setText(time);
-                }
-                handler.postDelayed(this, 1000);
-            }
-        });
+        initializeSongProgressRunnable();
     }
 
     @Override
@@ -186,6 +87,46 @@ public class PlayerActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    public void initializeSongProgressRunnable() {
+        final Handler handler = new Handler();
+        PlayerActivity.this.runOnUiThread(new Runnable() {
+
+            String time;
+
+            @Override
+            public void run() {
+                if (player != null && player.isPlaying()) {
+                    songSeekBar.setProgress(player.getCurrentPosition() / 1000);
+
+                    // TODO test performance, optimize if needed
+
+                    int minutes = ((player.getCurrentPosition() / (1000 * 60)) % 60);
+                    int seconds = ((player.getCurrentPosition() / 1000) % 60);
+
+                    if (minutes < 10) {
+                        if (seconds < 10) {
+                            time = "0"+minutes + ":" + "0" + seconds;
+                        }
+                        else  {
+                            time = "0"+minutes + ":" + seconds;
+                        }
+                    }
+                    else {
+                        if (seconds < 10) {
+                            time = minutes + ":" + "0" + seconds;
+                        }
+                        else {
+                            time = minutes + ":" + seconds;
+                        }
+                    }
+
+                    songProgressTextView.setText(time);
+                }
+                handler.postDelayed(this, 1000);
+            }
+        });
+    }
+
     public void initializePlayer() {
         if (player == null) {
             player = new MediaPlayer();
@@ -193,13 +134,13 @@ public class PlayerActivity extends AppCompatActivity {
 
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 public void onCompletion(MediaPlayer mp) {
-                    nextTrack(next);
+                    nextTrack(findViewById(R.id.btnNext));
                 }
             });
 
             currentSongPath = Uri.parse(songList.get(i).getPath());
 
-            // service for background playback
+            // starting service for background playback
             Intent intent = new Intent(this, PlayerService.class);
             startService(intent);
         }
@@ -212,25 +153,11 @@ public class PlayerActivity extends AppCompatActivity {
 
     public void initializeButtons() {
 
-        play = (Button)findViewById(R.id.btnPlay);
-        play.setOnClickListener(new View.OnClickListener() {
+        playbackButton = (Button)findViewById(R.id.btnPlay);
+        playbackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playMusic(play);
-            }
-        });
-        next = (Button)findViewById(R.id.btnNext);
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextTrack(next);
-            }
-        });
-        prev = (Button)findViewById(R.id.btnPrev);
-        prev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                previousTrack(prev);
+                playMusic(playbackButton);
             }
         });
 
@@ -302,12 +229,17 @@ public class PlayerActivity extends AppCompatActivity {
 
     public void songSelected(View view) {
         try {
+            Log.i("songSelected before", String.valueOf(i));
+
             songList.get(i).isSelected = false;
             songsListView.getAdapter().getView(i, songView, songsListView);
 
             songView = view;
 
+            // nullPointer when view is recycled
             i = songsListView.getPositionForView(view);
+
+            Log.i("songSelected after", String.valueOf(i));
 
             songList.get(i).isSelected = true;
             songsListView.getAdapter().getView(i, songView, songsListView);
@@ -318,7 +250,7 @@ public class PlayerActivity extends AppCompatActivity {
             playSong(currentSongPath);
         }
         catch (Exception ex) {
-            Log.i("i", String.valueOf(i));
+            Log.e("i", String.valueOf(i));
             ex.printStackTrace();
         }
     }
@@ -327,11 +259,11 @@ public class PlayerActivity extends AppCompatActivity {
 
         if (player.isPlaying()) {
             player.pause();
-            play.setBackground(getDrawable(R.drawable.ic_play_circle_fill_24dp));
+            playbackButton.setBackground(getDrawable(R.drawable.ic_play_circle_fill_24dp));
         }
         else {
             player.start();
-            play.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
+            playbackButton.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
         }
     }
 
@@ -348,18 +280,20 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     public void nextTrack(View view){
-        songsListView.setSelection(i);
-        songsListView.scrollTo(0, i+1);
+        Log.i("nextTrack", String.valueOf(i));
 
-        songSeekBar.setProgress(0);
+        songsListView.setSelection(i);
+        songsListView.scrollTo(0, i + 1);
+
         songSelected(getViewByPosition(i+1, songsListView));
     }
 
     public void previousTrack(View view){
+        Log.i("previousTrack", String.valueOf(i));
+
         songsListView.scrollTo(0, i - 2);
         songsListView.setSelection(i - 2);
 
-        songSeekBar.setProgress(0);
         songSelected(getViewByPosition(i-1, songsListView));
     }
 
@@ -395,7 +329,7 @@ public class PlayerActivity extends AppCompatActivity {
 
             player.start();
 
-            play.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
+            playbackButton.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
         }
         catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
