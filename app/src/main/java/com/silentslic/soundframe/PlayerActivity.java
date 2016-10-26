@@ -40,6 +40,8 @@ public class PlayerActivity extends AppCompatActivity {
 
     SeekBar songSeekBar;
 
+    static String time = "";
+
     Uri currentSongPath;
     int i = 0;
 
@@ -53,8 +55,10 @@ public class PlayerActivity extends AppCompatActivity {
 
         Log.i("songList size", String.valueOf(songList.size()));
 
-        initializePlayer();
-        initializeMusicList();
+        if (player == null)
+            initializePlayer();
+        if (songsListView == null)
+            initializeMusicList();
         initializeButtons();
         initializeSongProgressRunnable();
     }
@@ -80,11 +84,14 @@ public class PlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (player != null) {
-            player.release();
-            player = null;
-        }
         super.onDestroy();
+
+        if (isFinishing()) {
+            if (player != null) {
+                player.release();
+                player = null;
+            }
+        }
     }
 
     public void initializeSongProgressRunnable() {
@@ -153,47 +160,51 @@ public class PlayerActivity extends AppCompatActivity {
 
     public void initializeButtons() {
 
-        playbackButton = (Button)findViewById(R.id.btnPlay);
-        playbackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playMusic(playbackButton);
-            }
-        });
+        if (playbackButton == null) {
+            playbackButton = (Button) findViewById(R.id.btnPlay);
+        }
 
-        songDurationTextView = (TextView) findViewById(R.id.songDurationTextView);
-        songProgressTextView = (TextView) findViewById(R.id.songProgressTextView);
+            songDurationTextView = (TextView) findViewById(R.id.songDurationTextView);
+            songProgressTextView = (TextView) findViewById(R.id.songProgressTextView);
 
-        songSeekBar = (SeekBar) findViewById(R.id.songSeekBar);
 
-        songSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            boolean wasPlaying = false;
+        if (player.isPlaying()) {
+            playbackButton.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
+            Log.i("init", time);
+            songDurationTextView.setText(time);
+        }
 
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (player != null && !player.isPlaying()) {
-                    player.seekTo(progress * 1000);
-                    if (wasPlaying)
-                        player.start();
+        if (songSeekBar == null) {
+            songSeekBar = (SeekBar) findViewById(R.id.songSeekBar);
+
+            songSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                boolean wasPlaying = false;
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (player != null && !player.isPlaying()) {
+                        player.seekTo(progress * 1000);
+                        if (wasPlaying)
+                            player.start();
+                    }
                 }
-            }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                if (player.isPlaying()) {
-                    wasPlaying = true;
-                    player.pause();
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    if (player.isPlaying()) {
+                        wasPlaying = true;
+                        player.pause();
+                    } else {
+                        wasPlaying = false;
+                    }
                 }
-                else {
-                    wasPlaying = false;
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
                 }
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
+            });
+        }
     }
 
     public ArrayList<Song> readStorageForMusic() {
@@ -306,7 +317,7 @@ public class PlayerActivity extends AppCompatActivity {
             songSeekBar.setMax(player.getDuration() / 1000);
 
             // formatted duration of song for textView
-            String time;
+            //String time;
             int minutes = ((player.getDuration() / (1000 * 60)) % 60);
             int seconds = ((player.getDuration() / 1000) % 60);
             if (minutes < 10) {
@@ -326,6 +337,8 @@ public class PlayerActivity extends AppCompatActivity {
                 }
             }
             songDurationTextView.setText(time);
+            Log.i("play", time);
+            //currentSongDurationDisplayTime = time;
 
             player.start();
 
