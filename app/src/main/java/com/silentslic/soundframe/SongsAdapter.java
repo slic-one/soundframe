@@ -21,6 +21,9 @@ class SongsAdapter extends ArrayAdapter<Song> {
         super(context, 0, songs);
     }
 
+    private static final int NOT_SELECTED = -1;
+    private int selectedPos = NOT_SELECTED;
+
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -39,12 +42,21 @@ class SongsAdapter extends ArrayAdapter<Song> {
 
         songName.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/minisystem.ttf"));
 
-        if (song.isSelected) {
+        if (position == selectedPos) {
             songName.setBackgroundColor(getContext().getResources().getColor(R.color.selected_song_background));
-        } else {
+        }
+        else {
             songName.setBackgroundColor(getContext().getResources().getColor(R.color.player_background));
         }
 
         return convertView;
+    }
+
+    void setSelection(int position) {
+        if (selectedPos == position)
+            selectedPos = NOT_SELECTED;
+        else
+            selectedPos = position;
+        notifyDataSetChanged();
     }
 }

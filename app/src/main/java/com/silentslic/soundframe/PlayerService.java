@@ -40,14 +40,14 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
                     player.start();
                 break;
             case AudioManager.AUDIOFOCUS_LOSS:
-                // Lost focus for an unbounded amount of time: stop playback and release media player
+                // Lost focus for an unbounded amount of formattedCurrentSongDuration: stop playback and release media player
                 if(player.isPlaying())
                     player.stop();
                 player.release();
                 player = null;
                 break;
             case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
-                // Lost focus for a short time, but we have to stop playback
+                // Lost focus for a short formattedCurrentSongDuration, but we have to stop playback
                 if(player.isPlaying()) player.pause();
                 break;
         }

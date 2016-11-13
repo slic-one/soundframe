@@ -13,8 +13,10 @@
 
     android:singleLine="true"
 
-    android:backgroundTint="@color/player_background"
     android:backgroundTintMode="add"
+
+    android:background="@android:color/black"
+    android:backgroundTint="@android:color/transparent"
 
     android:clickable="true"
     android:onClick="songSelected"

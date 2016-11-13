@@ -1,6 +1,7 @@
 package com.silentslic.soundframe;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -8,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -28,9 +30,6 @@ public class PlayerActivity extends AppCompatActivity {
 
     ArrayList<Song> songList;
 
-    // used for highlighting selected ListView item
-    View songView;
-
     ListView songsListView;
 
     Button playbackButton;
@@ -40,10 +39,14 @@ public class PlayerActivity extends AppCompatActivity {
 
     SeekBar songSeekBar;
 
-    static String time = "";
+    static String formattedCurrentSongDuration = "";
 
     Uri currentSongPath;
     int i = 0;
+
+    SongsAdapter adapter;
+
+    MusicIntentReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +79,35 @@ public class PlayerActivity extends AppCompatActivity {
             case R.id.action_refresh_list:
                 readStorageForMusic();
                 return true;
+            case R.id.action_toggle_seek_bar:
+                View seekBarLine = findViewById(R.id.seekBarLine);
+                if (seekBarLine.getVisibility() == View.VISIBLE)
+                    seekBarLine.setVisibility(View.GONE);
+                else
+                    seekBarLine.setVisibility(View.VISIBLE);
+                return true;
+            case R.id.action_toggle_action_bar:
+                ActionBar actionBar = getSupportActionBar();
+
+                if (actionBar != null) {
+                    if (actionBar.isShowing())
+                        actionBar.hide();
+                    else
+                        actionBar.show();
+                    return true;
+                }
+                return false;
             default:
                 // Invoke the superclass to handle unrecognized action.
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+        registerReceiver(receiver, filter);
+        super.onResume();
     }
 
     @Override
@@ -149,13 +177,18 @@ public class PlayerActivity extends AppCompatActivity {
 
             // starting service for background playback
             Intent intent = new Intent(this, PlayerService.class);
+
+            //register receiver
+            receiver = new MusicIntentReceiver();
+
             startService(intent);
         }
     }
 
     public void initializeMusicList() {
         songsListView = ((ListView)findViewById(R.id.songListView));
-        songsListView.setAdapter(new SongsAdapter(this, songList));
+        adapter = new SongsAdapter(this, songList);
+        songsListView.setAdapter(adapter);
     }
 
     public void initializeButtons() {
@@ -164,14 +197,13 @@ public class PlayerActivity extends AppCompatActivity {
             playbackButton = (Button) findViewById(R.id.btnPlay);
         }
 
-            songDurationTextView = (TextView) findViewById(R.id.songDurationTextView);
-            songProgressTextView = (TextView) findViewById(R.id.songProgressTextView);
+        songDurationTextView = (TextView) findViewById(R.id.songDurationTextView);
+        songProgressTextView = (TextView) findViewById(R.id.songProgressTextView);
 
 
         if (player.isPlaying()) {
             playbackButton.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
-            Log.i("init", time);
-            songDurationTextView.setText(time);
+            songDurationTextView.setText(formattedCurrentSongDuration);
         }
 
         if (songSeekBar == null) {
@@ -238,22 +270,23 @@ public class PlayerActivity extends AppCompatActivity {
         return list;
     }
 
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
+    }
+
     public void songSelected(View view) {
         try {
-            Log.i("songSelected before", String.valueOf(i));
-
-            songList.get(i).isSelected = false;
-            songsListView.getAdapter().getView(i, songView, songsListView);
-
-            songView = view;
-
-            // nullPointer when view is recycled
             i = songsListView.getPositionForView(view);
 
-            Log.i("songSelected after", String.valueOf(i));
-
-            songList.get(i).isSelected = true;
-            songsListView.getAdapter().getView(i, songView, songsListView);
+            adapter.setSelection(i);
 
             currentSongPath = Uri.parse(String.valueOf(view.getTag()));
             player.reset();
@@ -275,18 +308,6 @@ public class PlayerActivity extends AppCompatActivity {
         else {
             player.start();
             playbackButton.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
-        }
-    }
-
-    public View getViewByPosition(int pos, ListView listView) {
-        final int firstListItemPosition = listView.getFirstVisiblePosition();
-        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-
-        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
-            return listView.getAdapter().getView(pos, null, listView);
-        } else {
-            final int childIndex = pos - firstListItemPosition;
-            return listView.getChildAt(childIndex);
         }
     }
 
@@ -317,28 +338,23 @@ public class PlayerActivity extends AppCompatActivity {
             songSeekBar.setMax(player.getDuration() / 1000);
 
             // formatted duration of song for textView
-            //String time;
             int minutes = ((player.getDuration() / (1000 * 60)) % 60);
             int seconds = ((player.getDuration() / 1000) % 60);
             if (minutes < 10) {
                 if (seconds < 10) {
-                    time = "0"+minutes + ":" + "0" + seconds;
+                    formattedCurrentSongDuration = "0"+minutes + ":" + "0" + seconds;
                 }
                 else  {
-                    time = "0"+minutes + ":" + seconds;
+                    formattedCurrentSongDuration = "0"+minutes + ":" + seconds;
                 }
+            }
+            else if (seconds < 10) {
+                formattedCurrentSongDuration = minutes + ":" + "0" + seconds;
             }
             else {
-                if (seconds < 10) {
-                    time = minutes + ":" + "0" + seconds;
-                }
-                else {
-                    time = minutes + ":" + seconds;
-                }
+                formattedCurrentSongDuration = minutes + ":" + seconds;
             }
-            songDurationTextView.setText(time);
-            Log.i("play", time);
-            //currentSongDurationDisplayTime = time;
+            songDurationTextView.setText(formattedCurrentSongDuration);
 
             player.start();
 

@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:theme="@style/AppTheme"
 
     android:background="@color/player_background"
@@ -21,10 +22,13 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal"
+
         style="@style/Widget.AppCompat.ListView">
     </ListView>
 
     <LinearLayout
+        android:id="@+id/seekBarLine"
+
         android:clipToPadding="false"
         android:background="@color/player_background"
         android:orientation="horizontal"
@@ -93,10 +97,7 @@
             android:backgroundTint="#cccccc"
             android:elevation="10sp"
 
-            android:onClick="playMusic"
-
-            android:visibility="visible" />
-
+            android:onClick="playMusic"/>
 
         <Button
             style="?android:buttonBarButtonStyle"
