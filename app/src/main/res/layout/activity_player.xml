@@ -75,6 +75,23 @@
 
         <Button
             style="?android:buttonBarButtonStyle"
+            android:id="@+id/btnRepeat"
+            android:layout_width="36dp"
+
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+
+            android:layout_marginRight="30dp"
+
+            android:background="@drawable/ic_repeat_24dp"
+            android:backgroundTint="#404040"
+            android:elevation="10dp"
+
+            android:onClick="repeat"
+            android:tag="inactive" />
+
+        <Button
+            style="?android:buttonBarButtonStyle"
             android:id="@+id/btnPrev"
             android:layout_width="64dp"
 
@@ -112,5 +129,23 @@
             android:elevation="10dp"
 
             android:onClick="nextTrack" />
+
+        <Button
+            style="?android:buttonBarButtonStyle"
+            android:id="@+id/btnShuffle"
+            android:layout_width="36dp"
+
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+
+            android:layout_marginLeft="30dp"
+
+            android:tag="inactive"
+
+            android:background="@drawable/ic_shuffle_24dp"
+            android:backgroundTint="#404040"
+            android:elevation="10dp"
+
+            android:onClick="shuffle"/>
     </LinearLayout>
 </LinearLayout>

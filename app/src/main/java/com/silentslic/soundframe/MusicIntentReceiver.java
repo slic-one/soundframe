@@ -7,7 +7,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 
 /**
- * BroadcastReciever for handling the AUDIO_BECOMES_NOISY event
+ * BroadcastReciever for handling the headset plug event
  */
 
 public class MusicIntentReceiver extends BroadcastReceiver {

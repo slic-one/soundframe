@@ -5,4 +5,5 @@
     <color name="selected_song_background">#222222</color>
     <color name="song_text">#908fcf</color>
     <color name="player_controls">#fafafa</color>
+    <color name="player_controls_inactive">#404040</color>
 </resources>

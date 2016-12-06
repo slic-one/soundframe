@@ -2,6 +2,7 @@ package com.silentslic.soundframe;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -22,7 +23,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 public class PlayerActivity extends AppCompatActivity {
 
@@ -48,6 +52,8 @@ public class PlayerActivity extends AppCompatActivity {
 
     MusicIntentReceiver receiver;
 
+    boolean isRepeatOn = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +70,10 @@ public class PlayerActivity extends AppCompatActivity {
             initializeMusicList();
         initializeButtons();
         initializeSongProgressRunnable();
+
+        //select first song from the list
+        // TODO save position in sharedpref
+        adapter.setSelection(0);
     }
 
     @Override
@@ -167,9 +177,24 @@ public class PlayerActivity extends AppCompatActivity {
             player = new MediaPlayer();
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
+            player.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    Log.e("player", "Error: " + what + ", " + extra);
+                    return true;
+                }
+            });
+
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                public void onCompletion(MediaPlayer mp) {
-                    nextTrack(findViewById(R.id.btnNext));
+                public void onCompletion(MediaPlayer mp)
+                {
+                    if (!isRepeatOn)
+                        nextTrack(findViewById(R.id.btnNext));
+                    else {
+                        player.reset();
+                        songSeekBar.setProgress(0);
+                        playSong(currentSongPath);
+                    }
                 }
             });
 
@@ -314,19 +339,29 @@ public class PlayerActivity extends AppCompatActivity {
     public void nextTrack(View view){
         Log.i("nextTrack", String.valueOf(i));
 
+        if (i == songList.size()-1)
+            i = 0;
+        else
+            i++;
+
         songsListView.setSelection(i);
         songsListView.scrollTo(0, i + 1);
 
-        songSelected(getViewByPosition(i+1, songsListView));
+        songSelected(getViewByPosition(i, songsListView));
     }
 
     public void previousTrack(View view){
         Log.i("previousTrack", String.valueOf(i));
 
-        songsListView.scrollTo(0, i - 2);
-        songsListView.setSelection(i - 2);
+        if (i == 0)
+            i = songList.size()-1;
+        else
+            i--;
 
-        songSelected(getViewByPosition(i-1, songsListView));
+        songsListView.scrollTo(0, i - 2);
+        songsListView.setSelection(i);
+
+        songSelected(getViewByPosition(i, songsListView));
     }
 
     public void playSong(Uri songPath) {
@@ -363,6 +398,40 @@ public class PlayerActivity extends AppCompatActivity {
         catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
             Log.e("player", " i is " + i + " " + ex.getMessage());
+        }
+    }
+
+    public void repeat(View view) {
+        if (view.getTag().equals("inactive")) {
+            isRepeatOn = true;
+
+            view.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.player_controls)));
+            view.setTag("active");
+        }
+        else {
+            isRepeatOn = false;
+
+            view.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.player_controls_inactive)));
+            view.setTag("inactive");
+        }
+    }
+
+    public void shuffle(View view) {
+        if (view.getTag().equals("inactive")) {
+
+            // shuffle music list and re-initialize
+            Collections.shuffle(songList, new Random(System.nanoTime()));
+            initializeMusicList();
+
+            view.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.player_controls)));
+            view.setTag("active");
+        }
+        else {
+            songList = readStorageForMusic();
+            initializeMusicList();
+
+            view.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.player_controls_inactive)));
+            view.setTag("inactive");
         }
     }
 }
