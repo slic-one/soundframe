@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="player_background">#101010</color>
+    <color name="player_background">#212121</color>
+    <color name="list_background">#000000</color>
     <color name="song_list_background">#000010</color>
-    <color name="selected_song_background">#222222</color>
-    <color name="song_text">#908fcf</color>
+    <color name="selected_song_background">#212121</color>
+    <color name="song_text">#7986cb</color>
     <color name="player_controls">#fafafa</color>
-    <color name="player_controls_inactive">#404040</color>
+    <color name="player_controls_inactive">#bdbdbd</color>
 </resources>

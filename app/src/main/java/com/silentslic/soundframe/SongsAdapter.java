@@ -46,17 +46,14 @@ class SongsAdapter extends ArrayAdapter<Song> {
             songName.setBackgroundColor(getContext().getResources().getColor(R.color.selected_song_background));
         }
         else {
-            songName.setBackgroundColor(getContext().getResources().getColor(R.color.player_background));
+            songName.setBackgroundColor(getContext().getResources().getColor(R.color.list_background));
         }
 
         return convertView;
     }
 
     void setSelection(int position) {
-        if (selectedPos == position)
-            selectedPos = NOT_SELECTED;
-        else
-            selectedPos = position;
+        selectedPos = position;
         notifyDataSetChanged();
     }
 }

@@ -52,7 +52,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.2"
-        sha1="47238562380c94dcd59904e7c27cc900277ef15f">
+        sha1="c72c369aaa2d81da213d6d81da30cf096a012440">
         <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_e074b08d219547539c34cb2566e6d76230025c15/classes.dex" />
     </item>
     <item
@@ -142,7 +142,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.2"
-        sha1="f92b630886db7ec022b168e590c451d1eb20c2ba">
+        sha1="d5b47632c7f7a38b47f3e4f0637fcc758e027b52">
         <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_8104ea76a577894a0528c22d1aa8cc0d248c07cd/classes.dex" />
     </item>
     <item

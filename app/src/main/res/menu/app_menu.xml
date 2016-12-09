@@ -13,4 +13,7 @@
     <item android:id="@+id/action_toggle_action_bar"
         android:title="Toggle action bar"
         app:showAsAction="never"/>
+    <item android:id="@+id/action_toggle_adv_controls"
+        android:title="Toggle additional buttons"
+        app:showAsAction="never"/>
 </menu>

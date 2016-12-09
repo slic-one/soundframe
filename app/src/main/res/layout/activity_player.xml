@@ -88,7 +88,8 @@
             android:elevation="10dp"
 
             android:onClick="repeat"
-            android:tag="inactive" />
+            android:tag="inactive"
+            android:visibility="gone" />
 
         <Button
             style="?android:buttonBarButtonStyle"
@@ -146,6 +147,7 @@
             android:backgroundTint="#404040"
             android:elevation="10dp"
 
-            android:onClick="shuffle"/>
+            android:onClick="shuffle"
+            android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

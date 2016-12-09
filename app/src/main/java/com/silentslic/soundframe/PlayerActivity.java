@@ -1,5 +1,6 @@
 package com.silentslic.soundframe;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -22,8 +24,6 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -72,7 +72,6 @@ public class PlayerActivity extends AppCompatActivity {
         initializeSongProgressRunnable();
 
         //select first song from the list
-        // TODO save position in sharedpref
         adapter.setSelection(0);
     }
 
@@ -81,6 +80,32 @@ public class PlayerActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.app_menu, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setMessage("Quit " + getString(R.string.app_name) + "?");
+
+        builder1.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        PlayerActivity.this.finish();
+                    }
+                });
+
+        builder1.setNeutralButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                }
+        );
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 
     @Override
@@ -107,6 +132,19 @@ public class PlayerActivity extends AppCompatActivity {
                     return true;
                 }
                 return false;
+            case R.id.action_toggle_adv_controls:
+                View shuffle = findViewById(R.id.btnShuffle);
+                View repeat = findViewById(R.id.btnRepeat);
+                // It's enough to get the state of one of the buttons
+                if (shuffle.getVisibility() == View.VISIBLE) {
+                    shuffle.setVisibility(View.GONE);
+                    repeat.setVisibility(View.GONE);
+                }
+                else {
+                    shuffle.setVisibility(View.VISIBLE);
+                    repeat.setVisibility(View.VISIBLE);
+                }
+                return true;
             default:
                 // Invoke the superclass to handle unrecognized action.
                 return super.onOptionsItemSelected(item);
@@ -118,6 +156,12 @@ public class PlayerActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         registerReceiver(receiver, filter);
         super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(receiver);
+        super.onPause();
     }
 
     @Override
@@ -166,6 +210,11 @@ public class PlayerActivity extends AppCompatActivity {
                     }
 
                     songProgressTextView.setText(time);
+                }
+                else if (player != null && !player.isPlaying()) {
+                    if (playbackButton.getBackground() != getDrawable(R.drawable.ic_play_circle_fill_24dp)) {
+                        playbackButton.setBackground(getDrawable(R.drawable.ic_play_circle_fill_24dp));
+                    }
                 }
                 handler.postDelayed(this, 1000);
             }
@@ -392,6 +441,8 @@ public class PlayerActivity extends AppCompatActivity {
             songDurationTextView.setText(formattedCurrentSongDuration);
 
             player.start();
+
+
 
             playbackButton.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
         }
