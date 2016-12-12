@@ -394,6 +394,8 @@ public class PlayerActivity extends AppCompatActivity {
             i++;
 
         songsListView.setSelection(i);
+        // TODO try this out
+        //adapter.setSelection(0);
         songsListView.scrollTo(0, i + 1);
 
         songSelected(getViewByPosition(i, songsListView));
@@ -473,6 +475,9 @@ public class PlayerActivity extends AppCompatActivity {
             // shuffle music list and re-initialize
             Collections.shuffle(songList, new Random(System.nanoTime()));
             initializeMusicList();
+            
+            //TODO CHECK
+            adapter.setSelection(i);
 
             view.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.player_controls)));
             view.setTag("active");
