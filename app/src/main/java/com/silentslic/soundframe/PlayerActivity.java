@@ -159,9 +159,14 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        unregisterReceiver(receiver);
-        super.onPause();
+    protected void onStop() {
+        try {
+            unregisterReceiver(receiver);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        super.onStop();
     }
 
     @Override
@@ -238,7 +243,7 @@ public class PlayerActivity extends AppCompatActivity {
                 public void onCompletion(MediaPlayer mp)
                 {
                     if (!isRepeatOn)
-                        nextTrack(findViewById(R.id.btnNext));
+                        nextSong(findViewById(R.id.btnNext));
                     else {
                         player.reset();
                         songSeekBar.setProgress(0);
@@ -357,23 +362,15 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     public void songSelected(View view) {
-        try {
             i = songsListView.getPositionForView(view);
 
             adapter.setSelection(i);
 
             currentSongPath = Uri.parse(String.valueOf(view.getTag()));
-            player.reset();
-            songSeekBar.setProgress(0);
             playSong(currentSongPath);
-        }
-        catch (Exception ex) {
-            Log.e("i", String.valueOf(i));
-            ex.printStackTrace();
-        }
     }
 
-    public void playMusic(View view){
+    public void playPause(View view){
 
         if (player.isPlaying()) {
             player.pause();
@@ -385,34 +382,32 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
-    public void nextTrack(View view){
-        Log.i("nextTrack", String.valueOf(i));
+    public void nextSong(View view){
+        Log.i("nextSong", String.valueOf(i));
 
-        if (i == songList.size()-1)
-            i = 0;
-        else
+        if (i != songList.size()-1) // if not the last element in the list
             i++;
+        else
+            i = 0;
 
-        songsListView.setSelection(i);
-        // TODO try this out
-        //adapter.setSelection(0);
-        songsListView.scrollTo(0, i + 1);
+        adapter.setSelection(i);
 
-        songSelected(getViewByPosition(i, songsListView));
+        currentSongPath = Uri.parse(String.valueOf(getViewByPosition(i, songsListView).getTag()));
+        playSong(currentSongPath);
     }
 
-    public void previousTrack(View view){
-        Log.i("previousTrack", String.valueOf(i));
+    public void previousSong(View view){
+        Log.i("previousSong", String.valueOf(i));
 
-        if (i == 0)
-            i = songList.size()-1;
-        else
+        if (i != 0) // if not the first element in the list
             i--;
+        else
+            i = songList.size()-1;
 
-        songsListView.scrollTo(0, i - 2);
-        songsListView.setSelection(i);
+        adapter.setSelection(i);
 
-        songSelected(getViewByPosition(i, songsListView));
+        currentSongPath = Uri.parse(String.valueOf(getViewByPosition(i, songsListView).getTag()));
+        playSong(currentSongPath);
     }
 
     public void playSong(Uri songPath) {
@@ -421,6 +416,7 @@ public class PlayerActivity extends AppCompatActivity {
             player.setDataSource(getApplicationContext(), songPath);
             player.prepare();
 
+            songSeekBar.setProgress(0);
             songSeekBar.setMax(player.getDuration() / 1000);
 
             // formatted duration of song for textView

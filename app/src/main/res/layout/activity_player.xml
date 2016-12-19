@@ -15,7 +15,7 @@
         android:id="@+id/songListView"
 
         android:clipToPadding="false"
-
+        android:divider="@android:color/transparent"
         android:choiceMode="singleChoice"
 
         android:layout_width="match_parent"
@@ -103,7 +103,7 @@
             android:backgroundTint="#cccccc"
             android:elevation="10dp"
 
-            android:onClick="previousTrack" />
+            android:onClick="previousSong" />
 
         <Button
             android:id="@+id/btnPlay"
@@ -115,7 +115,7 @@
             android:backgroundTint="#cccccc"
             android:elevation="10sp"
 
-            android:onClick="playMusic"/>
+            android:onClick="playPause"/>
 
         <Button
             style="?android:buttonBarButtonStyle"
@@ -129,7 +129,7 @@
             android:backgroundTint="#cccccc"
             android:elevation="10dp"
 
-            android:onClick="nextTrack" />
+            android:onClick="nextSong" />
 
         <Button
             style="?android:buttonBarButtonStyle"
