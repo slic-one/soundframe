@@ -3,15 +3,6 @@
 
     <item
         is-multidex="true"
-        jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
-        <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-24.2.1_fb484c87118209ca277642fc6ebc445e54f83ae9/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -39,21 +30,66 @@
     </item>
     <item
         is-multidex="true"
-        jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.1/jars/libs/internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="867dad63c33388ff8c7644b236579355036d075f">
-        <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_ddd813db48df2a729206ec7ca2696d885b45ff63/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.1/jars/libs/internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.2"
         sha1="fbf8da429efd5ad21e02e3e5ecaa1efc4167878d">
         <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_d7c412f9c95e0c715ded42227a918b73da6ec068/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
+        <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-media-compat-24.2.1_3a067acd4df37b2e474d3d34a82504a320875996/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="780dd5b7899170a2a586955d6e39e554bcb3d2b0">
+        <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_e074b08d219547539c34cb2566e6d76230025c15/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="94bc1dfb84dcc8b6f6f8f7cc726d7b2dd39c1574">
+        <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-24.2.1_f0a9973ccbf55261382bbfbaf3cb9f897808821c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
+        <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-compat-24.2.1_8e3cd64569c55ec212f0f75bce72dceb8c8aeb8d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
+        <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-24.2.1_fb484c87118209ca277642fc6ebc445e54f83ae9/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.1/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="867dad63c33388ff8c7644b236579355036d075f">
+        <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_ddd813db48df2a729206ec7ca2696d885b45ff63/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -84,15 +120,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
-        <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-media-compat-24.2.1_3a067acd4df37b2e474d3d34a82504a320875996/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.2.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -111,20 +138,11 @@
     </item>
     <item
         is-multidex="true"
-        jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="9104b21741bf0691d3b3b5dceb094b0f87873ec5">
-        <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_e074b08d219547539c34cb2566e6d76230025c15/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.2"
-        sha1="31aafd902d9adc01c0983fefd75ff88d1886c208">
+        sha1="61002b960662071ca93b568ddcd5d6d0ba1b8ac3">
         <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_8104ea76a577894a0528c22d1aa8cc0d248c07cd/classes.dex" />
     </item>
     <item
@@ -135,24 +153,6 @@
         revision="24.0.2"
         sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
         <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-utils-24.2.1_6b061e5a34d475b10aa4e226b1d418d9ee25382c/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="94bc1dfb84dcc8b6f6f8f7cc726d7b2dd39c1574">
-        <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-24.2.1_f0a9973ccbf55261382bbfbaf3cb9f897808821c/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
-        <dex dex="/home/slic/ZeWorkspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-compat-24.2.1_8e3cd64569c55ec212f0f75bce72dceb8c8aeb8d/classes.dex" />
     </item>
 
 </items>

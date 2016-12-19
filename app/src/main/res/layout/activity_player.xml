@@ -23,6 +23,12 @@
         android:layout_weight="1"
         android:orientation="horizontal"
 
+        android:backgroundTintMode="add"
+        android:background="@android:color/black"
+        android:backgroundTint="@android:color/black"
+
+        android:cacheColorHint="#00000000"
+
         style="@style/Widget.AppCompat.ListView">
     </ListView>
 

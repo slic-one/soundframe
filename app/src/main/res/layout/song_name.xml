@@ -9,14 +9,19 @@
     android:textColor="@color/song_text"
     android:textSize="16sp"
 
+    android:shadowDx="2"
+    android:shadowDy="2"
+    android:shadowColor="@android:color/black"
+    android:shadowRadius="1"
+
     android:fontFamily="serif-monospace"
 
     android:singleLine="true"
 
-    android:backgroundTintMode="add"
+    android:backgroundTintMode="src_in"
 
-    android:background="@android:color/black"
-    android:backgroundTint="@android:color/black"
+    android:background="@android:color/transparent"
+    android:backgroundTint="@android:color/transparent"
 
     android:clickable="true"
     android:onClick="songSelected"

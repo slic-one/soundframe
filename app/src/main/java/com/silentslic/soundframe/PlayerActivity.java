@@ -145,6 +145,10 @@ public class PlayerActivity extends AppCompatActivity {
                     repeat.setVisibility(View.VISIBLE);
                 }
                 return true;
+            case R.id.action_toggle_list:
+                songsListView.setBackground(getDrawable(R.drawable.unspecified));
+
+                return true;
             default:
                 // Invoke the superclass to handle unrecognized action.
                 return super.onOptionsItemSelected(item);
