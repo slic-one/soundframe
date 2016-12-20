@@ -155,23 +155,23 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
-        registerReceiver(receiver, filter);
-        super.onResume();
-    }
-
-    @Override
-    protected void onStop() {
-        try {
-            unregisterReceiver(receiver);
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        super.onStop();
-    }
+//    @Override
+//    protected void onResume() {
+//        IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+//        registerReceiver(receiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+//        super.onResume();
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        try {
+//            unregisterReceiver(receiver);
+//        }
+//        catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//        super.onStop();
+//    }
 
     @Override
     protected void onDestroy() {
@@ -223,6 +223,11 @@ public class PlayerActivity extends AppCompatActivity {
                 else if (player != null && !player.isPlaying()) {
                     if (playbackButton.getBackground() != getDrawable(R.drawable.ic_play_circle_fill_24dp)) {
                         playbackButton.setBackground(getDrawable(R.drawable.ic_play_circle_fill_24dp));
+                    }
+                }
+                else if (player != null && player.isPlaying()) {
+                    if (playbackButton.getBackground() != getDrawable(R.drawable.ic_pause_circle_fill_24dp)) {
+                        playbackButton.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
                     }
                 }
                 handler.postDelayed(this, 1000);

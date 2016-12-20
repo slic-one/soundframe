@@ -26,8 +26,11 @@ public class MusicIntentReceiver extends BroadcastReceiver {
 //            if(telephonyManager.getDataState() == TelephonyManager.STATE){
 //
 //            }
-            Log.i("MusicIntentReceiver", "In Call fired");
-            PlayerActivity.player.pause();
+            Log.i("MusicIntentReceiver", "In Call fired with state " + intent.getStringExtra("state"));
+            if (intent.getStringExtra("state").equals("OFFHOOK"))
+                PlayerActivity.player.pause();
+            else if (intent.getStringExtra("state").equals("IDLE"))
+                PlayerActivity.player.start();
         }
 //        else if (intent.getAction().equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
 //            Log.d("MusicIntentReceiver", "ACTION_AUDIO_BECOMING_NOISY fired");
