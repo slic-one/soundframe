@@ -5,6 +5,7 @@
     <color name="song_list_background">#000010</color>
     <color name="selected_song_background">#212121</color>
     <color name="song_text">#7986cb</color>
+    <color name="song_text_selected">#ffffff</color>
     <color name="player_controls">#fafafa</color>
     <color name="player_controls_inactive">#bdbdbd</color>
 </resources>

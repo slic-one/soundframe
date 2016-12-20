@@ -43,10 +43,12 @@ class SongsAdapter extends ArrayAdapter<Song> {
         songName.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/minisystem.ttf"));
 
         if (position == selectedPos) {
-            songName.setBackgroundColor(getContext().getResources().getColor(R.color.selected_song_background));
+            //songName.setBackgroundColor(getContext().getResources().getColor(R.color.selected_song_background));
+            songName.setTextColor(getContext().getResources().getColor(R.color.song_text_selected));
         }
         else {
-            songName.setBackgroundColor(getContext().getResources().getColor(R.color.list_background));
+            //songName.setBackgroundColor(getContext().getResources().getColor(R.color.list_background));
+            songName.setTextColor(getContext().getResources().getColor(R.color.song_text));
         }
 
         return convertView;
