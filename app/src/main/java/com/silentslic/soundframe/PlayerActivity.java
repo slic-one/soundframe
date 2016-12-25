@@ -155,29 +155,17 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onResume() {
-//        IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
-//        registerReceiver(receiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
-//        super.onResume();
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        try {
-//            unregisterReceiver(receiver);
-//        }
-//        catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//        super.onStop();
-//    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
         if (isFinishing()) {
+            try {
+                unregisterReceiver(receiver);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
             if (player != null) {
                 player.release();
                 player = null;
@@ -265,11 +253,13 @@ public class PlayerActivity extends AppCompatActivity {
 
             // starting service for background playback
             Intent intent = new Intent(this, PlayerService.class);
+            startService(intent);
 
             //register receiver
             receiver = new MusicIntentReceiver();
-
-            startService(intent);
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(Intent.ACTION_HEADSET_PLUG);
+            registerReceiver(receiver, filter);
         }
     }
 
@@ -480,8 +470,8 @@ public class PlayerActivity extends AppCompatActivity {
             // shuffle music list and re-initialize
             Collections.shuffle(songList, new Random(System.nanoTime()));
             initializeMusicList();
-            
-            //TODO CHECK
+
+            i = 0;
             adapter.setSelection(i);
 
             view.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.player_controls)));
