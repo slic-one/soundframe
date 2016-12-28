@@ -11,7 +11,6 @@ public class Song {
     private String Duration;
     private int Id;
 
-    public boolean isSelected = false;
 
     public Song(int id, String name, String path, String duration) {
         Id = id;
