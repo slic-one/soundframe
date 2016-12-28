@@ -4,9 +4,6 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.silentslic.stufftodo.MainActivity">
 
-    <item android:id="@+id/action_refresh_list"
-          android:title="@string/refresh_list"
-          app:showAsAction="never"/>
     <item android:id="@+id/action_toggle_seek_bar"
         android:title="@string/toggle_seek_bar"
         app:showAsAction="never"/>
@@ -15,8 +12,5 @@
         app:showAsAction="never"/>
     <item android:id="@+id/action_toggle_adv_controls"
         android:title="Toggle additional buttons"
-        app:showAsAction="never"/>
-    <item android:id="@+id/action_toggle_list"
-        android:title="Toggle background"
         app:showAsAction="never"/>
 </menu>

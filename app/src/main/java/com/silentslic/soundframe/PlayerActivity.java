@@ -3,6 +3,7 @@ package com.silentslic.soundframe;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.media.AudioManager;
@@ -10,6 +11,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -54,10 +56,14 @@ public class PlayerActivity extends AppCompatActivity {
 
     boolean isRepeatOn = false;
 
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
+
+        sharedPreferences  = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (songList == null)
             songList = readStorageForMusic();
@@ -71,8 +77,21 @@ public class PlayerActivity extends AppCompatActivity {
         initializeButtons();
         initializeSongProgressRunnable();
 
+        loadPreferences();
+
         //select first song from the list
         adapter.setSelection(0);
+    }
+
+    private void loadPreferences() {
+        if (sharedPreferences.getInt("seekBarVisibility", View.VISIBLE) == View.GONE)
+            findViewById(R.id.seekBarLine).setVisibility(View.GONE);
+        if (sharedPreferences.getInt("shuffleRepeatVisibility", View.GONE) == View.VISIBLE) {
+            findViewById(R.id.btnShuffle).setVisibility(View.VISIBLE);
+            findViewById(R.id.btnRepeat).setVisibility(View.VISIBLE);
+        }
+        if (!sharedPreferences.getBoolean("actionBarShowing", true) && (getSupportActionBar() != null))
+            getSupportActionBar().hide();
     }
 
     @Override
@@ -111,15 +130,15 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_refresh_list:
-                readStorageForMusic();
-                return true;
             case R.id.action_toggle_seek_bar:
                 View seekBarLine = findViewById(R.id.seekBarLine);
                 if (seekBarLine.getVisibility() == View.VISIBLE)
                     seekBarLine.setVisibility(View.GONE);
                 else
                     seekBarLine.setVisibility(View.VISIBLE);
+
+                sharedPreferences.edit().putInt("seekBarVisibility", seekBarLine.getVisibility()).apply();
+
                 return true;
             case R.id.action_toggle_action_bar:
                 ActionBar actionBar = getSupportActionBar();
@@ -129,13 +148,16 @@ public class PlayerActivity extends AppCompatActivity {
                         actionBar.hide();
                     else
                         actionBar.show();
+
+                    sharedPreferences.edit().putBoolean("actionBarShowing", actionBar.isShowing()).apply();
+
                     return true;
                 }
                 return false;
             case R.id.action_toggle_adv_controls:
                 View shuffle = findViewById(R.id.btnShuffle);
                 View repeat = findViewById(R.id.btnRepeat);
-                // It's enough to get the state of one of the buttons
+
                 if (shuffle.getVisibility() == View.VISIBLE) {
                     shuffle.setVisibility(View.GONE);
                     repeat.setVisibility(View.GONE);
@@ -144,9 +166,8 @@ public class PlayerActivity extends AppCompatActivity {
                     shuffle.setVisibility(View.VISIBLE);
                     repeat.setVisibility(View.VISIBLE);
                 }
-                return true;
-            case R.id.action_toggle_list:
-                songsListView.setBackground(getDrawable(R.drawable.unspecified));
+
+                sharedPreferences.edit().putInt("shuffleRepeatVisibility", shuffle.getVisibility()).apply();
 
                 return true;
             default:
