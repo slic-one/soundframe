@@ -8,9 +8,9 @@
         android:title="@string/toggle_seek_bar"
         app:showAsAction="never"/>
     <item android:id="@+id/action_toggle_action_bar"
-        android:title="Toggle action bar"
+        android:title="@string/toggle_actionbar"
         app:showAsAction="never"/>
     <item android:id="@+id/action_toggle_adv_controls"
-        android:title="Toggle additional buttons"
+        android:title="@string/toggle_additional_buttons"
         app:showAsAction="never"/>
 </menu>
