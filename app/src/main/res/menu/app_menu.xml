@@ -13,4 +13,7 @@
     <item android:id="@+id/action_toggle_adv_controls"
         android:title="@string/toggle_additional_buttons"
         app:showAsAction="never"/>
+    <item android:id="@+id/action_change_player_font_color"
+        android:title="Player foreground"
+        app:showAsAction="never"/>
 </menu>

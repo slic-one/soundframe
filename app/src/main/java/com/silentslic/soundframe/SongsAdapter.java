@@ -2,7 +2,9 @@ package com.silentslic.soundframe;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,8 @@ class SongsAdapter extends ArrayAdapter<Song> {
     SongsAdapter(Context context, ArrayList<Song> songs) {
         super(context, 0, songs);
     }
+
+    private int fontColor = PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("fontColor", ContextCompat.getColor(getContext(), R.color.song_text));
 
     private static final int NOT_SELECTED = -1;
     private int selectedPos = NOT_SELECTED;
@@ -43,14 +47,17 @@ class SongsAdapter extends ArrayAdapter<Song> {
         songName.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/minisystem.ttf"));
 
         if (position == selectedPos) {
-            songName.setTextColor(getContext().getResources().getColor(R.color.song_text_selected));
+            songName.setTextColor(ContextCompat.getColor(getContext(), R.color.song_text_selected)); // TODO optimize
         }
         else {
-            songName.setTextColor(getContext().getResources().getColor(R.color.song_text));
+            songName.setTextColor(fontColor);
+            //songName.setTextColor(ContextCompat.getColor(getContext(), R.color.song_text));
         }
 
         return convertView;
     }
+
+    public void setFontColor(int color) {this.fontColor = color;}
 
     void setSelection(int position) {
         selectedPos = position;

@@ -1,5 +1,10 @@
 package com.silentslic.soundframe;
 
+import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,9 +18,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.ColorInt;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,11 +35,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jrummyapps.android.colorpicker.ColorPickerDialog;
+import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class PlayerActivity extends AppCompatActivity {
+public class PlayerActivity extends AppCompatActivity implements ColorPickerDialogListener {
 
     public static MediaPlayer player = null;
 
@@ -59,12 +70,15 @@ public class PlayerActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
 
+    NotificationManager notificationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
         sharedPreferences  = PreferenceManager.getDefaultSharedPreferences(this);
+        i = sharedPreferences.getInt("i", 0);
 
         if (songList == null)
             songList = readStorageForMusic();
@@ -79,6 +93,8 @@ public class PlayerActivity extends AppCompatActivity {
         initializeSongProgressRunnable();
 
         loadPreferences();
+
+        createNotification();
 
         //select first song from the list
         adapter.setSelection(0);
@@ -171,6 +187,9 @@ public class PlayerActivity extends AppCompatActivity {
                 sharedPreferences.edit().putInt("shuffleRepeatVisibility", shuffle.getVisibility()).apply();
 
                 return true;
+            case R.id.action_change_player_font_color:
+                ColorPickerDialog.newBuilder().setColor(ContextCompat.getColor(this, R.color.song_text)).show(this);
+                return true;
             default:
                 // Invoke the superclass to handle unrecognized action.
                 return super.onOptionsItemSelected(item);
@@ -178,8 +197,17 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        sharedPreferences.edit().putInt("i", i).apply();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        //sharedPreferences.edit().putInt("i", i).apply();
 
         if (isFinishing()) {
             try {
@@ -188,6 +216,7 @@ public class PlayerActivity extends AppCompatActivity {
             catch (Exception ex) {
                 ex.printStackTrace();
             }
+            notificationManager.cancel(41304130);
             if (player != null) {
                 player.release();
                 player = null;
@@ -337,6 +366,22 @@ public class PlayerActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void createNotification() {
+        NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle(getString(R.string.app_name))
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setContentText("Song - Name");
+
+        Intent intent = new Intent(this, PlayerActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        mBuilder.setContentIntent(pendingIntent);
+
+        notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(41304130, mBuilder.build());
     }
 
     public ArrayList<Song> readStorageForMusic() {
@@ -506,5 +551,20 @@ public class PlayerActivity extends AppCompatActivity {
             view.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.player_controls_inactive)));
             view.setTag("inactive");
         }
+    }
+
+    @Override
+    public void onColorSelected(int dialogId, @ColorInt int color) {
+        // TODO set color to all rows
+        //ContextCompat.getColor(this, R.color.song_  text);
+
+        //((TextView) findViewById(R.id.songNameLine)).setTextColor(color);
+        adapter.setFontColor(color);
+        sharedPreferences.edit().putInt("fontColor", color).apply();
+    }
+
+    @Override
+    public void onDialogDismissed(int dialogId) {
+
     }
 }
