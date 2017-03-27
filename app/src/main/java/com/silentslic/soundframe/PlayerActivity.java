@@ -1,7 +1,5 @@
 package com.silentslic.soundframe;
 
-import android.app.Dialog;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -190,10 +188,54 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
             case R.id.action_change_player_font_color:
                 ColorPickerDialog.newBuilder().setColor(ContextCompat.getColor(this, R.color.song_text)).show(this);
                 return true;
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
             default:
                 // Invoke the superclass to handle unrecognized action.
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void toggleActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            if (actionBar.isShowing())
+                actionBar.hide();
+            else
+                actionBar.show();
+
+            sharedPreferences.edit().putBoolean("actionBarShowing", actionBar.isShowing()).apply();
+        }
+    }
+    public void toggleSeekBar() {
+        View seekBarLine = findViewById(R.id.seekBarLine);
+        if (seekBarLine.getVisibility() == View.VISIBLE)
+            seekBarLine.setVisibility(View.GONE);
+        else
+            seekBarLine.setVisibility(View.VISIBLE);
+
+        sharedPreferences.edit().putInt("seekBarVisibility", seekBarLine.getVisibility()).apply();
+    }
+    public void toggleAdditionalButtons() {
+        View shuffle = findViewById(R.id.btnShuffle);
+        View repeat = findViewById(R.id.btnRepeat);
+
+        if (shuffle.getVisibility() == View.VISIBLE) {
+            shuffle.setVisibility(View.GONE);
+            repeat.setVisibility(View.GONE);
+        }
+        else {
+            shuffle.setVisibility(View.VISIBLE);
+            repeat.setVisibility(View.VISIBLE);
+        }
+
+        sharedPreferences.edit().putInt("shuffleRepeatVisibility", shuffle.getVisibility()).apply();
+    }
+    public void foregroundColorPicker() {
+        ColorPickerDialog.newBuilder().setColor(ContextCompat.getColor(this, R.color.song_text)).show(this);
+        // TODO make this universal
     }
 
     @Override
@@ -428,12 +470,12 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
     }
 
     public void songSelected(View view) {
-            i = songsListView.getPositionForView(view);
+        i = songsListView.getPositionForView(view);
 
-            adapter.setSelection(i);
+        adapter.setSelection(i);
 
-            currentSongPath = Uri.parse(String.valueOf(view.getTag()));
-            playSong(currentSongPath);
+        currentSongPath = Uri.parse(String.valueOf(view.getTag()));
+        playSong(currentSongPath);
     }
 
     public void playPause(View view){

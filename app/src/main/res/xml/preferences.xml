@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="actionBarPref"
+        android:title="Action bar" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="seekBarPref"
+        android:title="Seek bar" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="additionalButtonsPref"
+        android:title="Additional buttons" />
+    <Preference
+        android:key="foregroundColorPref"
+        android:title="Player foreground" />
+</PreferenceScreen>

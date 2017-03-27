@@ -7,4 +7,6 @@
     <string name="toggle_seek_bar">Toggle seek bar</string>
     <string name="toggle_actionbar">Toggle actionbar</string>
     <string name="toggle_additional_buttons">Toggle additional buttons</string>
+    <string name="player_foreground">Player Foreground</string>
+    <string name="settings">Settings</string>
 </resources>

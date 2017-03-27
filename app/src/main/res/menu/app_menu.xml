@@ -14,6 +14,9 @@
         android:title="@string/toggle_additional_buttons"
         app:showAsAction="never"/>
     <item android:id="@+id/action_change_player_font_color"
-        android:title="Player foreground"
+        android:title="@string/player_foreground"
+        app:showAsAction="never"/>
+    <item android:id="@+id/action_settings"
+        android:title="@string/settings"
         app:showAsAction="never"/>
 </menu>
