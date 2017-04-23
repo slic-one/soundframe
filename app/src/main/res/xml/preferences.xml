@@ -1,19 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="actionBarPref"
-        android:title="Action bar" />
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="seekBarPref"
-        android:title="Seek bar" />
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="additionalButtonsPref"
-        android:title="Additional buttons" />
-    <Preference
-        android:key="foregroundColorPref"
-        android:title="Player foreground" />
+    <PreferenceCategory android:title="UI Elements">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="actionBarPref"
+            android:title="Action bar" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="seekBarPref"
+            android:title="Seek bar" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="additionalButtonsPref"
+            android:title="Additional buttons" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Colors">
+        <Preference
+            android:key="bublik"
+            android:title="Do magic"/>
+
+
+        <com.jrummyapps.android.colorpicker.ColorPreference
+            android:defaultValue="0xFF3F51B5"
+            android:key="default_color"
+            android:summary="This is the default ColorPreference"
+            android:title="Default color picker"/>
+        <!--<com.jrummyapps.android.colorpicker.ColorPreference-->
+            <!--android:defaultValue="0x000010FF"-->
+            <!--android:key="backgroundColor"-->
+            <!--android:title="Playlist background"/>-->
+        <!--<com.jrummyapps.android.colorpicker.ColorPreference-->
+            <!--android:defaultValue="0xFFFFFFFF"-->
+            <!--android:key="buttonsColor"-->
+            <!--android:title="Buttons color"/>-->
+        <!--<com.jrummyapps.android.colorpicker.ColorPreference-->
+            <!--android:defaultValue="0x212121FF"-->
+            <!--android:key="panelsBackground"-->
+            <!--android:title="Panels background"/>-->
+    </PreferenceCategory>
 </PreferenceScreen>

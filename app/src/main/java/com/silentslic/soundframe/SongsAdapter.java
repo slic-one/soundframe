@@ -24,9 +24,12 @@ class SongsAdapter extends ArrayAdapter<Song> {
     }
 
     private int fontColor = PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("fontColor", ContextCompat.getColor(getContext(), R.color.song_text));
+    private int selectedSongColor = PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("selectedSongColor", ContextCompat.getColor(getContext(), R.color.song_text_selected));
 
     private static final int NOT_SELECTED = -1;
     private int selectedPos = NOT_SELECTED;
+
+    private Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/minisystem.ttf");
 
     @NonNull
     @Override
@@ -44,20 +47,21 @@ class SongsAdapter extends ArrayAdapter<Song> {
         songName.setText(song.getName());
         songName.setTag(song.getPath());
 
-        songName.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/minisystem.ttf"));
+        songName.setTypeface(font);
 
         if (position == selectedPos) {
-            songName.setTextColor(ContextCompat.getColor(getContext(), R.color.song_text_selected)); // TODO optimize
+            songName.setTextColor(selectedSongColor);
         }
         else {
             songName.setTextColor(fontColor);
-            //songName.setTextColor(ContextCompat.getColor(getContext(), R.color.song_text));
         }
 
         return convertView;
     }
 
-    public void setFontColor(int color) {this.fontColor = color;}
+    void setFontColor(int color) {this.fontColor = color;}
+
+    void setSelectedSongColor(int color) {this.selectedSongColor = color;}
 
     void setSelection(int position) {
         selectedPos = position;

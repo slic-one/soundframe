@@ -609,4 +609,8 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
     public void onDialogDismissed(int dialogId) {
 
     }
+
+    public SongsAdapter getAdapter() {
+        return adapter;
+    }
 }

@@ -3,120 +3,48 @@
 
     <item
         is-multidex="true"
-        jar="C:\Users\One\.android\build-cache\1182f78960d13337500163edad2fd1303fb5551f\output\jars\classes.jar"
+        jar="/home/slic/Workspace/soundframe/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="4b746ef0fd46acb5aaf3d9ab9a4cec22c28d3211">
-        <dex dex="D:\Projects\soundframe\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_0f222f660739211dd94b38e8f1df16c3ce0b2480\classes.dex" />
+        sha1="fdf75b839c466295c0f1d6abb5059ec2d25d6c57">
+        <dex dex="/home/slic/Workspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_b1afefbd4de9123187873de699ef61bacee9862d/classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\One\.android\build-cache\a8282791c7eed6bc01b48ac46c60f9d3099f9605\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="70f23cb87278f89aa51e6f57e8f0fd5266572d95">
-        <dex dex="D:\Projects\soundframe\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_dc72c5cd550caa7d171d248884cb04d9dd5ab79b\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\One\.android\build-cache\6c66c6e40e02949a18e145d80c989e111567edba\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="518768f3200963fbfec652f498da2c9d39245234">
-        <dex dex="D:\Projects\soundframe\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_8fc9f5fa089d3c2b5c106f3f50f849d680f2b670\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\One\.android\build-cache\3d265c9f33205742cda65806a3b449b53dcbad83\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="425c7b17887e5c3f8cbdf67ba171bc246f29b42c">
-        <dex dex="D:\Projects\soundframe\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_ab7fd87e302c13b2526c7f8bf235212b2452c68f\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\One\.android\build-cache\061c1ad26ebd1aec9a0c64bde47253f28656a56a\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="93c10d68ab5ea070f15782ae6d3a28d1f1d8f45e">
-        <dex dex="D:\Projects\soundframe\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_1b617dcdbe8e9e0eafdcc3955200ee17d7673dd4\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\One\.android\build-cache\78ec6a0a92323c5711e0e595c0d8bc40fc4c819b\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="d6a04527c17597019dad82777c5094a3d60d1c33">
-        <dex dex="D:\Projects\soundframe\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_0dea6fb56273069f159620421e7d3c847d7a98d5\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\android-sdk-windows\extras\android\m2repository\com\android\support\support-annotations\25.3.0\support-annotations-25.3.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="dd84903d2e1af25a6081ef9038ad863cb14ca3a0">
-        <dex dex="D:\Projects\soundframe\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-25.3.0_1a3e4fede5d2695fe2b79885326cd1ebdd19a34f\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\One\.android\build-cache\ba06147a75f80e705335b85ae9fe4b0702dbe29c\output\jars\classes.jar"
+        jar="/root/.android/build-cache/8e443b69137658d8f911f72596480b487db5d35b/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
         sha1="7bcaf79a8fddac3919d7cca1f773057855db34ce">
-        <dex dex="D:\Projects\soundframe\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_1ef45c933edc5b598b944ed145a6b00ed4709c9c\classes.dex" />
+        <dex dex="/home/slic/Workspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3de6d7e78397cd455360d4d481a6abdd00ead41a/classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="D:\Projects\soundframe\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jar="/home/slic/Android/Sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="12194b48d39a7803fbc778d96601ce6a4d9a9d13">
-        <dex dex="D:\Projects\soundframe\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_28db8c1b0174e034aa9078f45c4ad272889e4ad2\classes.dex" />
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="/home/slic/Workspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/constraint-layout-solver-1.0.2_86f25643089347d0e7208e6d3db333d0ff5d9609/classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\One\.android\build-cache\8e525405ac5c2e527421e722908b118c45cc53ef\output\jars\classes.jar"
+        jar="/home/slic/Workspace/soundframe/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="93c1199fcb0a34b980e6fff8350daff62e696ec2">
-        <dex dex="D:\Projects\soundframe\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_57ebdc4febe595e02260d7e61431e116767d833f\classes.dex" />
+        sha1="510aa6efc159983dfbffa676a0dae37568c0a46f">
+        <dex dex="/home/slic/Workspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_bbf88790e3880a7986003f9556abd6bd07e2a3e3/classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\One\.android\build-cache\148b54c8dd0ac47cc59a49afe79d975fcb4f2027\output\jars\classes.jar"
+        jar="/root/.android/build-cache/f704b93ae675854bfc088b972241abe1a0e0d04a/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="D:\Projects\soundframe\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_c33eb3848d2a95ff7ec17d8df3e872a342a6daba\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\One\.android\build-cache\d943c76c90977f74ac34a5587471fd2b4e77a0df\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="5cc5ef8347a6bafa14556cbd35230aa9b3431bb0">
-        <dex dex="D:\Projects\soundframe\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_3f3a16f8926b909102c44fc54acc0f5e1a381a97\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="D:\Projects\soundframe\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="c82741bc129dd5f99f11a4ab8666ae24262053b6">
-        <dex dex="D:\Projects\soundframe\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_64ffad6c1de36ce077c3ac36c5d9eaf6fb3d2549\classes.dex" />
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="/home/slic/Workspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_91e53f36b4f02578b20703d7a84f1bc73757fb38/classes.dex" />
     </item>
 
 </items>
