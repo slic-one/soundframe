@@ -47,7 +47,7 @@ class SongsAdapter extends ArrayAdapter<Song> {
         songName.setText(song.getName());
         songName.setTag(song.getPath());
 
-        songName.setTypeface(font);
+        //songName.setTypeface(font);
 
         if (position == selectedPos) {
             songName.setTextColor(selectedSongColor);

@@ -7,26 +7,8 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="fdf75b839c466295c0f1d6abb5059ec2d25d6c57">
+        sha1="817e9c2b904a44fdf5a69efbfd3e461f5db5db59">
         <dex dex="/home/slic/Workspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_b1afefbd4de9123187873de699ef61bacee9862d/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.android/build-cache/8e443b69137658d8f911f72596480b487db5d35b/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="7bcaf79a8fddac3919d7cca1f773057855db34ce">
-        <dex dex="/home/slic/Workspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3de6d7e78397cd455360d4d481a6abdd00ead41a/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/slic/Android/Sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
-        <dex dex="/home/slic/Workspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/constraint-layout-solver-1.0.2_86f25643089347d0e7208e6d3db333d0ff5d9609/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -36,15 +18,6 @@
         revision="25.0.2"
         sha1="510aa6efc159983dfbffa676a0dae37568c0a46f">
         <dex dex="/home/slic/Workspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_bbf88790e3880a7986003f9556abd6bd07e2a3e3/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/root/.android/build-cache/f704b93ae675854bfc088b972241abe1a0e0d04a/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
-        <dex dex="/home/slic/Workspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_91e53f36b4f02578b20703d7a84f1bc73757fb38/classes.dex" />
     </item>
 
 </items>

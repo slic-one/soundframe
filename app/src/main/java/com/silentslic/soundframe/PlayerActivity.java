@@ -13,7 +13,9 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.ColorInt;
@@ -27,9 +29,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,12 +75,23 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
     NotificationManager notificationManager;
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("iter", i);
+        Log.i("saveInstanceState", "saved." + i);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
         sharedPreferences  = PreferenceManager.getDefaultSharedPreferences(this);
-        i = sharedPreferences.getInt("i", 0);
+        if (savedInstanceState != null)
+            i = savedInstanceState.getInt("iter");
+        //i = sharedPreferences.getInt("i", 0);
+
+        Log.i("i", "loaded " + i);
 
         if (songList == null)
             songList = readStorageForMusic();
@@ -188,6 +203,9 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
             case R.id.action_change_player_font_color:
                 ColorPickerDialog.newBuilder().setColor(ContextCompat.getColor(this, R.color.song_text)).show(this);
                 return true;
+            case R.id.action_set_timer:
+                startShutdownTimer();
+                return true;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
@@ -195,6 +213,56 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
                 // Invoke the superclass to handle unrecognized action.
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void startShutdownTimer() {
+        final Spinner picker = new Spinner(this);
+        String[] values = {"15", "30", "60" };
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, values);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        picker.setAdapter(adapter);
+
+//        Dialog d = new Dialog(this);
+//        d.setTitle("For how long?");
+//        d.addContentView(picker, new ActionBar.LayoutParams(200, 200));
+//
+//        d.show();
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setMessage("Shutdown timer");
+        builder1.setView(picker);
+
+        builder1.setPositiveButton(
+                "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        int val = Integer.parseInt(picker.getSelectedItem().toString());
+                        val *= 60000;
+                        Log.i("CountdownTimer", "Set timer for " + val + "ms.");
+                        new CountDownTimer(val, 1000) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {}
+
+                            @Override
+                            public void onFinish() {
+                                PlayerActivity.this.finish();
+                            }
+                        }.start();
+                        Toast.makeText(PlayerActivity.this, "Timer set for " + picker.getSelectedItem().toString() + " minutes.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        builder1.setNeutralButton(
+                "Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                }
+        );
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 
     public void toggleActionBar() {
@@ -243,6 +311,7 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
         super.onPause();
 
         sharedPreferences.edit().putInt("i", i).apply();
+        Log.i("i", "saved");
     }
 
     @Override
@@ -602,6 +671,7 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
         //((TextView) findViewById(R.id.songNameLine)).setTextColor(color);
         adapter.setFontColor(color);
+        adapter.notifyDataSetChanged();
         sharedPreferences.edit().putInt("fontColor", color).apply();
     }
 
