@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -75,6 +76,9 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
     NotificationManager notificationManager;
 
     UIUtil uiUtil;
+
+    Drawable pauseDrawable;
+    Drawable playDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -278,6 +282,8 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
     }
 
     public void initializeButtons() {
+        playDrawable = getDrawable(R.drawable.ic_play_circle_fill_24dp);
+        pauseDrawable = getDrawable(R.drawable.ic_pause_circle_fill_24dp);
 
         if (playbackButton == null) {
             playbackButton = (Button) findViewById(R.id.btnPlay);
@@ -288,7 +294,7 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
 
         if (player.isPlaying()) {
-            playbackButton.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
+            playbackButton.setBackground(pauseDrawable);
             songDurationTextView.setText(formattedCurrentSongDuration);
         }
 
@@ -398,11 +404,11 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
         if (player.isPlaying()) {
             player.pause();
-            playbackButton.setBackground(getDrawable(R.drawable.ic_play_circle_fill_24dp));
+            playbackButton.setBackground(playDrawable);
         }
         else {
             player.start();
-            playbackButton.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
+            playbackButton.setBackground(pauseDrawable);
         }
     }
 
@@ -466,7 +472,7 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
 
 
-            playbackButton.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
+            playbackButton.setBackground(pauseDrawable);
         }
         catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
