@@ -99,7 +99,6 @@
 
         <Button
             style="?android:buttonBarButtonStyle"
-            android:id="@+id/btnPrev"
             android:layout_width="64dp"
 
             android:layout_height="wrap_content"

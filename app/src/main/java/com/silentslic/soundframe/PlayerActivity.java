@@ -74,12 +74,7 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
     NotificationManager notificationManager;
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("iter", i);
-        Log.i("saveInstanceState", "saved." + i);
-    }
+    UIUtil uiUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +106,8 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
         //select first song from the list
         adapter.setSelection(0);
+
+        uiUtil = new UIUtil(this, sharedPreferences);
     }
 
     private void loadPreferences() {
@@ -133,78 +130,26 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage("Quit " + getString(R.string.app_name) + "?");
-
-        builder1.setPositiveButton(
-                "Yes",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        PlayerActivity.this.finish();
-                    }
-                });
-
-        builder1.setNeutralButton(
-                "No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                }
-        );
-
-        AlertDialog alert11 = builder1.create();
-        alert11.show();
+        uiUtil.showQuitDialog();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_toggle_seek_bar:
-                View seekBarLine = findViewById(R.id.seekBarLine);
-                if (seekBarLine.getVisibility() == View.VISIBLE)
-                    seekBarLine.setVisibility(View.GONE);
-                else
-                    seekBarLine.setVisibility(View.VISIBLE);
-
-                sharedPreferences.edit().putInt("seekBarVisibility", seekBarLine.getVisibility()).apply();
-
+                uiUtil.toggleSeekBar();
                 return true;
             case R.id.action_toggle_action_bar:
-                ActionBar actionBar = getSupportActionBar();
-
-                if (actionBar != null) {
-                    if (actionBar.isShowing())
-                        actionBar.hide();
-                    else
-                        actionBar.show();
-
-                    sharedPreferences.edit().putBoolean("actionBarShowing", actionBar.isShowing()).apply();
-
-                    return true;
-                }
-                return false;
+                uiUtil.toggleActionBar();
+                return true;
             case R.id.action_toggle_adv_controls:
-                View shuffle = findViewById(R.id.btnShuffle);
-                View repeat = findViewById(R.id.btnRepeat);
-
-                if (shuffle.getVisibility() == View.VISIBLE) {
-                    shuffle.setVisibility(View.GONE);
-                    repeat.setVisibility(View.GONE);
-                }
-                else {
-                    shuffle.setVisibility(View.VISIBLE);
-                    repeat.setVisibility(View.VISIBLE);
-                }
-
-                sharedPreferences.edit().putInt("shuffleRepeatVisibility", shuffle.getVisibility()).apply();
-
+                uiUtil.toggleAdditionalButtons();
                 return true;
             case R.id.action_change_player_font_color:
                 ColorPickerDialog.newBuilder().setColor(ContextCompat.getColor(this, R.color.song_text)).show(this);
                 return true;
             case R.id.action_set_timer:
-                startShutdownTimer();
+                uiUtil.startShutdownTimer();
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -215,110 +160,9 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
         }
     }
 
-    private void startShutdownTimer() {
-        final Spinner picker = new Spinner(this);
-        String[] values = {"15", "30", "60" };
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, values);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        picker.setAdapter(adapter);
-
-//        Dialog d = new Dialog(this);
-//        d.setTitle("For how long?");
-//        d.addContentView(picker, new ActionBar.LayoutParams(200, 200));
-//
-//        d.show();
-
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage("Shutdown timer");
-        builder1.setView(picker);
-
-        builder1.setPositiveButton(
-                "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        int val = Integer.parseInt(picker.getSelectedItem().toString());
-                        val *= 60000;
-                        Log.i("CountdownTimer", "Set timer for " + val + "ms.");
-                        new CountDownTimer(val, 1000) {
-                            @Override
-                            public void onTick(long millisUntilFinished) {}
-
-                            @Override
-                            public void onFinish() {
-                                PlayerActivity.this.finish();
-                            }
-                        }.start();
-                        Toast.makeText(PlayerActivity.this, "Timer set for " + picker.getSelectedItem().toString() + " minutes.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        builder1.setNeutralButton(
-                "Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                }
-        );
-
-        AlertDialog alert11 = builder1.create();
-        alert11.show();
-    }
-
-    public void toggleActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-            if (actionBar.isShowing())
-                actionBar.hide();
-            else
-                actionBar.show();
-
-            sharedPreferences.edit().putBoolean("actionBarShowing", actionBar.isShowing()).apply();
-        }
-    }
-    public void toggleSeekBar() {
-        View seekBarLine = findViewById(R.id.seekBarLine);
-        if (seekBarLine.getVisibility() == View.VISIBLE)
-            seekBarLine.setVisibility(View.GONE);
-        else
-            seekBarLine.setVisibility(View.VISIBLE);
-
-        sharedPreferences.edit().putInt("seekBarVisibility", seekBarLine.getVisibility()).apply();
-    }
-    public void toggleAdditionalButtons() {
-        View shuffle = findViewById(R.id.btnShuffle);
-        View repeat = findViewById(R.id.btnRepeat);
-
-        if (shuffle.getVisibility() == View.VISIBLE) {
-            shuffle.setVisibility(View.GONE);
-            repeat.setVisibility(View.GONE);
-        }
-        else {
-            shuffle.setVisibility(View.VISIBLE);
-            repeat.setVisibility(View.VISIBLE);
-        }
-
-        sharedPreferences.edit().putInt("shuffleRepeatVisibility", shuffle.getVisibility()).apply();
-    }
-    public void foregroundColorPicker() {
-        ColorPickerDialog.newBuilder().setColor(ContextCompat.getColor(this, R.color.song_text)).show(this);
-        // TODO make this universal
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        sharedPreferences.edit().putInt("i", i).apply();
-        Log.i("i", "saved");
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        //sharedPreferences.edit().putInt("i", i).apply();
 
         if (isFinishing()) {
             try {
@@ -340,6 +184,8 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
         PlayerActivity.this.runOnUiThread(new Runnable() {
 
             String time;
+            int minutes;
+            int seconds;
 
             @Override
             public void run() {
@@ -348,8 +194,8 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
                     // TODO test performance, optimize if needed
 
-                    int minutes = ((player.getCurrentPosition() / (1000 * 60)) % 60);
-                    int seconds = ((player.getCurrentPosition() / 1000) % 60);
+                    minutes = ((player.getCurrentPosition() / (1000 * 60)) % 60);
+                    seconds = ((player.getCurrentPosition() / 1000) % 60);
 
                     if (minutes < 10) {
                         if (seconds < 10) {
@@ -370,16 +216,16 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
                     songProgressTextView.setText(time);
                 }
-                else if (player != null && !player.isPlaying()) {
-                    if (playbackButton.getBackground() != getDrawable(R.drawable.ic_play_circle_fill_24dp)) {
-                        playbackButton.setBackground(getDrawable(R.drawable.ic_play_circle_fill_24dp));
-                    }
-                }
-                else if (player != null && player.isPlaying()) {
-                    if (playbackButton.getBackground() != getDrawable(R.drawable.ic_pause_circle_fill_24dp)) {
-                        playbackButton.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
-                    }
-                }
+//                else if (player != null && !player.isPlaying()) {
+//                    if (playbackButton.getBackground() != getDrawable(R.drawable.ic_play_circle_fill_24dp)) {
+//                        playbackButton.setBackground(getDrawable(R.drawable.ic_play_circle_fill_24dp));
+//                    }
+//                }
+//                else if (player != null && player.isPlaying()) {
+//                    if (playbackButton.getBackground() != getDrawable(R.drawable.ic_pause_circle_fill_24dp)) {
+//                        playbackButton.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
+//                    }
+//                }
                 handler.postDelayed(this, 1000);
             }
         });
@@ -495,6 +341,7 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
         notificationManager.notify(41304130, mBuilder.build());
     }
 
+    // TODO fix refresh issue
     public ArrayList<Song> readStorageForMusic() {
         ArrayList<Song> list = new ArrayList<>();
 

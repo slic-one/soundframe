@@ -1,9 +1,6 @@
 <resources>
     <string name="app_name">Soundframe v1.0a</string>
 
-    <string name="path_play">M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zm-2,14.5v-9l6,4.5 -6,4.5z</string>
-    <string name="path_pause">M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zm-1,14H9V8h2v8zm4,0h-2V8h2v8z</string>
-
     <string name="toggle_seek_bar">Toggle seek bar</string>
     <string name="toggle_actionbar">Toggle actionbar</string>
     <string name="toggle_additional_buttons">Toggle additional buttons</string>
