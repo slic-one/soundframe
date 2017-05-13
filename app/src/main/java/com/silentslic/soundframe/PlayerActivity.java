@@ -15,6 +15,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
@@ -52,12 +53,11 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
     ArrayList<Song> songList;
 
     ListView songsListView;
-
     Button playbackButton;
-
     TextView songDurationTextView;
     TextView songProgressTextView;
-
+    Drawable pauseDrawable;
+    Drawable playDrawable;
     SeekBar songSeekBar;
 
     static String formattedCurrentSongDuration = "";
@@ -66,7 +66,6 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
     int i = 0;
 
     SongsAdapter adapter;
-
     MusicIntentReceiver receiver;
 
     boolean isRepeatOn = false;
@@ -77,18 +76,13 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
     UIUtil uiUtil;
 
-    Drawable pauseDrawable;
-    Drawable playDrawable;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
         sharedPreferences  = PreferenceManager.getDefaultSharedPreferences(this);
-        if (savedInstanceState != null)
-            i = savedInstanceState.getInt("iter");
-        //i = sharedPreferences.getInt("i", 0);
+        i = sharedPreferences.getInt("i", 0);
 
         Log.i("i", "loaded " + i);
 
@@ -108,10 +102,17 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
         createNotification();
 
-        //select first song from the list
-        adapter.setSelection(0);
+        //select last playing song
+        adapter.setSelection(i);
 
         uiUtil = new UIUtil(this, sharedPreferences);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        sharedPreferences.edit().putInt("i", i).apply();
     }
 
     private void loadPreferences() {
@@ -196,40 +197,29 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
                 if (player != null && player.isPlaying()) {
                     songSeekBar.setProgress(player.getCurrentPosition() / 1000);
 
-                    // TODO test performance, optimize if needed
-
                     minutes = ((player.getCurrentPosition() / (1000 * 60)) % 60);
                     seconds = ((player.getCurrentPosition() / 1000) % 60);
 
                     if (minutes < 10) {
-                        if (seconds < 10) {
-                            time = "0"+minutes + ":" + "0" + seconds;
-                        }
-                        else  {
-                            time = "0"+minutes + ":" + seconds;
-                        }
+                        if (seconds < 10) time = "0"+minutes + ":" + "0" + seconds;
+                        else time = "0"+minutes + ":" + seconds;
                     }
                     else {
-                        if (seconds < 10) {
-                            time = minutes + ":" + "0" + seconds;
-                        }
-                        else {
-                            time = minutes + ":" + seconds;
-                        }
+                        if (seconds < 10) time = minutes + ":" + "0" + seconds;
+                        else time = minutes + ":" + seconds;
                     }
 
                     songProgressTextView.setText(time);
                 }
-//                else if (player != null && !player.isPlaying()) {
-//                    if (playbackButton.getBackground() != getDrawable(R.drawable.ic_play_circle_fill_24dp)) {
+
+                // TODO redo this
+//                else if (player != null && !player.isPlaying())
+//                    if (playbackButton.getBackground() != getDrawable(R.drawable.ic_play_circle_fill_24dp))
 //                        playbackButton.setBackground(getDrawable(R.drawable.ic_play_circle_fill_24dp));
-//                    }
-//                }
-//                else if (player != null && player.isPlaying()) {
-//                    if (playbackButton.getBackground() != getDrawable(R.drawable.ic_pause_circle_fill_24dp)) {
+//                else if (player != null && player.isPlaying())
+//                    if (playbackButton.getBackground() != getDrawable(R.drawable.ic_pause_circle_fill_24dp))
 //                        playbackButton.setBackground(getDrawable(R.drawable.ic_pause_circle_fill_24dp));
-//                    }
-//                }
+
                 handler.postDelayed(this, 1000);
             }
         });
@@ -349,6 +339,7 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
     // TODO fix refresh issue
     public ArrayList<Song> readStorageForMusic() {
+
         ArrayList<Song> list = new ArrayList<>();
 
         Uri allsongsuri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
