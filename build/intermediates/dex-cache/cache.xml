@@ -7,7 +7,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="22414affbb0172859c53e927f4264e0bc9cd7d80">
+        sha1="984f387ec1edf2830597131edb216b3619becc91">
         <dex dex="/home/slic/Workspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_b1afefbd4de9123187873de699ef61bacee9862d/classes.dex" />
     </item>
     <item
@@ -16,7 +16,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="510aa6efc159983dfbffa676a0dae37568c0a46f">
+        sha1="caff8e51a24901cfc9cd7e1cf83d84f4cb0c103b">
         <dex dex="/home/slic/Workspace/soundframe/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_bbf88790e3880a7986003f9556abd6bd07e2a3e3/classes.dex" />
     </item>
 

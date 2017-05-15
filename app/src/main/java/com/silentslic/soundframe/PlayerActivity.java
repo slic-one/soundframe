@@ -22,6 +22,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -42,8 +44,10 @@ import android.widget.Toast;
 import com.jrummyapps.android.colorpicker.ColorPickerDialog;
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class PlayerActivity extends AppCompatActivity implements ColorPickerDialogListener {
@@ -76,6 +80,10 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
     UIUtil uiUtil;
 
+    String[] drawerItems;
+    ListView drawerList;
+    DrawerLayout drawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +105,7 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
             initializeMusicList();
         initializeButtons();
         initializeSongProgressRunnable();
+        initializeNavigationDrawer();
 
         loadPreferences();
 
@@ -106,6 +115,51 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
         adapter.setSelection(i);
 
         uiUtil = new UIUtil(this, sharedPreferences);
+
+        try {
+            player.reset();
+            player.setDataSource(getApplicationContext(), currentSongPath);
+            player.prepare();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    private void initializeNavigationDrawer() {
+        drawerItems = getResources().getStringArray(R.array.drawer_items);
+        drawerList = (ListView) findViewById(R.id.left_drawer);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        drawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,drawerItems));
+        drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        uiUtil.toggleSeekBar();
+                        break;
+                    case 1:
+                        uiUtil.toggleActionBar();
+                        break;
+                    case 2:
+                        uiUtil.toggleAdditionalButtons();
+                        break;
+                    case 3:
+                        ColorPickerDialog.newBuilder().setColor(ContextCompat.getColor(PlayerActivity.this, R.color.song_text)).show(PlayerActivity.this);
+                        break;
+                    case 4:
+                        startActivity(new Intent(PlayerActivity.this, SettingsActivity.class));
+                        break;
+                    case 5:
+                        uiUtil.startShutdownTimer();
+                        break;
+                    default:
+                        Toast.makeText(PlayerActivity.this, "default", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -262,6 +316,14 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
             IntentFilter filter = new IntentFilter();
             filter.addAction(Intent.ACTION_HEADSET_PLUG);
             registerReceiver(receiver, filter);
+
+//            try {
+//                player.setDataSource(getApplicationContext(), currentSongPath);
+//                player.prepare();
+//            }
+//            catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
         }
     }
 
@@ -460,8 +522,6 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
             songDurationTextView.setText(formattedCurrentSongDuration);
 
             player.start();
-
-
 
             playbackButton.setBackground(pauseDrawable);
         }

@@ -7,4 +7,13 @@
     <string name="player_foreground">Player Foreground</string>
     <string name="settings">Settings</string>
     <string name="shutdown_timer">Shutdown timer</string>
+
+    <string-array name="drawer_items">
+        <item>Toggle seek bar</item>
+        <item>Toggle actionbar</item>
+        <item>Toggle additional buttons</item>
+        <item>Player Foreground</item>
+        <item>Settings</item>
+        <item>Shutdown timer</item>
+    </string-array>
 </resources>
