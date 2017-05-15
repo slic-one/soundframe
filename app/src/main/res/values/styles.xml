@@ -12,5 +12,8 @@
     <style name="CustomActionBar" parent="Base.Widget.AppCompat.ActionBar">
         <item name="android:background">@color/player_background</item>
     </style>
+    <style name="DigitalFont" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:fontFamily">minisystem</item>
+    </style>
 
 </resources>

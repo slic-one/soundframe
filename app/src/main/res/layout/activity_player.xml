@@ -73,10 +73,8 @@
 
         <LinearLayout
             android:clipToPadding="false"
-            android:background="@color/player_background"
             android:elevation="10dp"
 
-            style="?android:buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
@@ -166,8 +164,7 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:choiceMode="singleChoice"
+        android:background="@color/player_background"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="#111"/>
+        android:choiceMode="singleChoice"/>
 </android.support.v4.widget.DrawerLayout>

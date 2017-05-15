@@ -9,6 +9,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -21,6 +23,9 @@ import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.ColorInt;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -28,10 +33,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -126,21 +133,44 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
     }
 
+    private class DigitalTextViewAdapter extends ArrayAdapter<String> {
+        DigitalTextViewAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull String[] objects) {
+            super(context, resource, objects);
+        }
+
+        private Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/minisystem.ttf");
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.digital_textvew, parent, false);
+            }
+            TextView text = (TextView) convertView.findViewById(R.id.digital_text);
+            //text.setTypeface(font);
+            return super.getView(position, convertView, parent);
+        }
+    }
+
     private void initializeNavigationDrawer() {
         drawerItems = getResources().getStringArray(R.array.drawer_items);
         drawerList = (ListView) findViewById(R.id.left_drawer);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        drawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,drawerItems));
+//        drawerLayout.setScrimColor(Color.argb(200, 0, 0, 0));
+
+//        drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.digital_textvew,drawerItems));
+        drawerList.setAdapter(new DigitalTextViewAdapter(this, R.layout.digital_textvew, drawerItems));
+
         drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        uiUtil.toggleSeekBar();
+                        uiUtil.toggleActionBar();
                         break;
                     case 1:
-                        uiUtil.toggleActionBar();
+                        uiUtil.toggleSeekBar();
                         break;
                     case 2:
                         uiUtil.toggleAdditionalButtons();
@@ -149,10 +179,10 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
                         ColorPickerDialog.newBuilder().setColor(ContextCompat.getColor(PlayerActivity.this, R.color.song_text)).show(PlayerActivity.this);
                         break;
                     case 4:
-                        startActivity(new Intent(PlayerActivity.this, SettingsActivity.class));
+                        uiUtil.startShutdownTimer();
                         break;
                     case 5:
-                        uiUtil.startShutdownTimer();
+                        startActivity(new Intent(PlayerActivity.this, SettingsActivity.class));
                         break;
                     default:
                         Toast.makeText(PlayerActivity.this, "default", Toast.LENGTH_SHORT).show();
@@ -195,21 +225,21 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_toggle_seek_bar:
-                uiUtil.toggleSeekBar();
-                return true;
-            case R.id.action_toggle_action_bar:
-                uiUtil.toggleActionBar();
-                return true;
-            case R.id.action_toggle_adv_controls:
-                uiUtil.toggleAdditionalButtons();
-                return true;
-            case R.id.action_change_player_font_color:
-                ColorPickerDialog.newBuilder().setColor(ContextCompat.getColor(this, R.color.song_text)).show(this);
-                return true;
-            case R.id.action_set_timer:
-                uiUtil.startShutdownTimer();
-                return true;
+//            case R.id.action_toggle_seek_bar:
+//                uiUtil.toggleSeekBar();
+//                return true;
+//            case R.id.action_toggle_action_bar:
+//                uiUtil.toggleActionBar();
+//                return true;
+//            case R.id.action_toggle_adv_controls:
+//                uiUtil.toggleAdditionalButtons();
+//                return true;
+//            case R.id.action_change_player_font_color:
+//                ColorPickerDialog.newBuilder().setColor(ContextCompat.getColor(this, R.color.song_text)).show(this);
+//                return true;
+//            case R.id.action_set_timer:
+//                uiUtil.startShutdownTimer();
+//                return true;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;

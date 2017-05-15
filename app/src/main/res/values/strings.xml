@@ -9,11 +9,11 @@
     <string name="shutdown_timer">Shutdown timer</string>
 
     <string-array name="drawer_items">
-        <item>Toggle seek bar</item>
-        <item>Toggle actionbar</item>
-        <item>Toggle additional buttons</item>
+        <item>Actionbar</item>
+        <item>Seek bar</item>
+        <item>Extra buttons</item>
         <item>Player Foreground</item>
-        <item>Settings</item>
         <item>Shutdown timer</item>
+        <item>Settings</item>
     </string-array>
 </resources>
