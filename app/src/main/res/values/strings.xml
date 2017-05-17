@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Soundframe v1.0a</string>
+    <string name="app_name">Soundframe</string>
 
     <string name="toggle_seek_bar">Toggle seek bar</string>
     <string name="toggle_actionbar">Toggle actionbar</string>

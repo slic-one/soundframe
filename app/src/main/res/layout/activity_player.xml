@@ -10,7 +10,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:theme="@style/AppTheme"
 
-        android:background="@color/player_background"
+        android:background="@android:color/transparent"
 
         android:orientation="vertical"
         android:weightSum="0"
@@ -28,9 +28,9 @@
             android:layout_weight="1"
             android:orientation="horizontal"
 
-            android:backgroundTintMode="add"
-            android:background="@android:color/black"
-            android:backgroundTint="@android:color/black"
+            android:backgroundTintMode="src_over"
+            android:background="@color/player_background"
+            android:backgroundTint="#99000000"
 
             android:cacheColorHint="#00000000"
 
@@ -161,10 +161,10 @@
     </LinearLayout>
     <ListView
         android:id="@+id/left_drawer"
-        android:layout_width="240dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/player_background"
-        android:divider="@android:color/transparent"
+        android:background="@drawable/gradient_rtl"
+        android:backgroundTint="@android:color/black"
         android:choiceMode="singleChoice"/>
 </android.support.v4.widget.DrawerLayout>

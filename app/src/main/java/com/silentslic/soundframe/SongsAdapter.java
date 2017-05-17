@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -29,7 +30,7 @@ class SongsAdapter extends ArrayAdapter<Song> {
     private static final int NOT_SELECTED = -1;
     private int selectedPos = NOT_SELECTED;
 
-    private Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/minisystem.ttf");
+    private Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/digit.ttf");
 
     @NonNull
     @Override

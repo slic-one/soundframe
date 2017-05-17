@@ -138,7 +138,7 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
             super(context, resource, objects);
         }
 
-        private Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/minisystem.ttf");
+        private Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/digit.ttf");
 
         @NonNull
         @Override
@@ -147,7 +147,7 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.digital_textvew, parent, false);
             }
             TextView text = (TextView) convertView.findViewById(R.id.digital_text);
-            //text.setTypeface(font);
+            text.setTypeface(font);
             return super.getView(position, convertView, parent);
         }
     }

@@ -23,7 +23,7 @@
         android:icon="@android:drawable/ic_menu_search"
         android:title="Search"
         app:showAsAction="ifRoom"
-        />
+        android:actionViewClass="android.widget.SearchView"/>
     <item android:id="@+id/action_settings"
         android:title="@string/settings"
         app:showAsAction="never"/>

@@ -7,7 +7,7 @@
 
     android:text="The Sample - Text"
     android:textColor="@color/song_text"
-    android:textSize="16sp"
+    android:textSize="20sp"
 
     android:shadowDx="2"
     android:shadowDy="2"
@@ -18,10 +18,7 @@
 
     android:singleLine="true"
 
-    android:backgroundTintMode="src_in"
 
-    android:background="@android:color/transparent"
-    android:backgroundTint="@android:color/transparent"
 
     android:clickable="true"
     android:onClick="songSelected"

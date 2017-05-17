@@ -8,7 +8,7 @@
         <item name="android:backgroundTint">
             @color/player_background
         </item>
-    </style>"
+    </style>
     <style name="CustomActionBar" parent="Base.Widget.AppCompat.ActionBar">
         <item name="android:background">@color/player_background</item>
     </style>
