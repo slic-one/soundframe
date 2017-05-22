@@ -179,9 +179,25 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
                         ColorPickerDialog.newBuilder().setColor(ContextCompat.getColor(PlayerActivity.this, R.color.song_text)).show(PlayerActivity.this);
                         break;
                     case 4:
-                        uiUtil.startShutdownTimer();
+                        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                        getIntent.setType("image/*");
+
+                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        pickIntent.setType("image/*");
+
+                        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+                        startActivityForResult(chooserIntent, 9);
                         break;
                     case 5:
+                        uiUtil.startShutdownTimer();
+                        break;
+                    case 6:
+                        // TODO equalizer
+
+                        break;
+                    case 7:
                         startActivity(new Intent(PlayerActivity.this, SettingsActivity.class));
                         break;
                     default:

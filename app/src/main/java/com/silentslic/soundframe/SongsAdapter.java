@@ -1,10 +1,12 @@
 package com.silentslic.soundframe;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +58,12 @@ class SongsAdapter extends ArrayAdapter<Song> {
         else {
             songName.setTextColor(fontColor);
         }
+
+        Log.i("songList position", "[" + position + "]");
+        if (position % 2 == 0)
+            songName.setBackgroundColor(Color.BLACK);
+        else
+            songName.setBackgroundColor(Color.parseColor("#111111"));
 
         return convertView;
     }

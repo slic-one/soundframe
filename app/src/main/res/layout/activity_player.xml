@@ -1,6 +1,7 @@
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
+    android:background="@android:color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,10 +18,11 @@
         tools:context=".PlayerActivity">
 
         <ListView
+            android:layout_margin="5dp"
             android:id="@+id/songListView"
 
             android:clipToPadding="false"
-            android:divider="@android:color/transparent"
+            android:divider="@color/player_background"
             android:choiceMode="singleChoice"
 
             android:layout_width="match_parent"
@@ -29,7 +31,7 @@
             android:orientation="horizontal"
 
             android:backgroundTintMode="src_over"
-            android:background="@color/player_background"
+            android:background="@android:color/transparent"
             android:backgroundTint="#99000000"
 
             android:cacheColorHint="#00000000"
@@ -72,12 +74,18 @@
         </LinearLayout>
 
         <LinearLayout
+            android:background="@android:drawable/spinner_background"
+            android:backgroundTint="@color/player_background"
             android:clipToPadding="false"
-            android:elevation="10dp"
 
+            android:padding="2dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
             android:gravity="center"
             android:orientation="horizontal"
             android:weightSum="1">
@@ -90,15 +98,14 @@
                 android:layout_height="32dp"
                 android:layout_gravity="center"
 
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="15dp"
 
                 android:background="@drawable/ic_repeat_24dp"
                 android:backgroundTint="#404040"
                 android:elevation="10dp"
 
                 android:onClick="repeat"
-                android:tag="inactive"
-                android:visibility="gone" />
+                android:tag="inactive" />
 
             <Button
                 style="?android:buttonBarButtonStyle"
@@ -147,7 +154,7 @@
                 android:layout_height="32dp"
                 android:layout_gravity="center"
 
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="15dp"
 
                 android:tag="inactive"
 
@@ -155,16 +162,16 @@
                 android:backgroundTint="#404040"
                 android:elevation="10dp"
 
-                android:onClick="shuffle"
-                android:visibility="gone" />
+                android:onClick="shuffle" />
         </LinearLayout>
     </LinearLayout>
     <ListView
+        android:layout_marginTop="10dp"
         android:id="@+id/left_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@drawable/gradient_rtl"
-        android:backgroundTint="@android:color/black"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"
         android:choiceMode="singleChoice"/>
 </android.support.v4.widget.DrawerLayout>

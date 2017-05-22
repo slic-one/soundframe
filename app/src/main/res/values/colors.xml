@@ -5,4 +5,6 @@
     <color name="song_text_selected">#ffffff</color>
     <color name="player_controls">#fafafa</color>
     <color name="player_controls_inactive">#bdbdbd</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
 </resources>

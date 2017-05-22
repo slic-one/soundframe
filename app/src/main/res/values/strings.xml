@@ -13,7 +13,9 @@
         <item>Seek bar</item>
         <item>Extra buttons</item>
         <item>Player Foreground</item>
+        <item>Background image</item>
         <item>Shutdown timer</item>
+        <item>Equalizer</item>
         <item>Settings</item>
     </string-array>
 </resources>

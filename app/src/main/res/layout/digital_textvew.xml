@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="45dp"
     android:paddingStart="5dp"
     android:paddingEnd="5dp"
     android:id="@+id/digital_text"
-    android:paddingTop="20dp"
-    android:paddingBottom="20dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
     android:textSize="24sp"
+
+    android:text="Placeholder"
+
+    android:background="@android:drawable/spinner_background"
+    android:backgroundTint="@color/player_background"
 
     android:shadowDx="2"
     android:shadowDy="2"
