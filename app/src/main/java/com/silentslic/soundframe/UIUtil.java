@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -135,5 +136,12 @@ public class UIUtil {
 
         AlertDialog alert11 = builder1.create();
         alert11.show();
+    }
+
+    public void toggleViewVisibility(View view) {
+        if (view.getVisibility() == View.VISIBLE)
+            view.setVisibility(View.GONE);
+        else
+            view.setVisibility(View.VISIBLE);
     }
 }

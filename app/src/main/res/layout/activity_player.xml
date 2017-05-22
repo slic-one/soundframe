@@ -17,6 +17,15 @@
         android:weightSum="0"
         tools:context=".PlayerActivity">
 
+        <EditText
+            android:background="@android:drawable/spinner_background"
+            android:backgroundTint="@color/player_background"
+            android:id="@+id/song_search"
+            android:hint="@string/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
         <ListView
             android:layout_margin="5dp"
             android:id="@+id/songListView"
@@ -104,6 +113,7 @@
                 android:backgroundTint="#404040"
                 android:elevation="10dp"
 
+                android:visibility="gone"
                 android:onClick="repeat"
                 android:tag="inactive" />
 
@@ -156,6 +166,7 @@
 
                 android:layout_marginLeft="15dp"
 
+                android:visibility="gone"
                 android:tag="inactive"
 
                 android:background="@drawable/ic_shuffle_24dp"

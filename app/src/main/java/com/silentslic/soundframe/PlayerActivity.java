@@ -3,23 +3,18 @@ package com.silentslic.soundframe;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.ColorInt;
@@ -28,10 +23,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,19 +37,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jrummyapps.android.colorpicker.ColorPickerDialog;
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 public class PlayerActivity extends AppCompatActivity implements ColorPickerDialogListener {
@@ -90,6 +83,8 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
     String[] drawerItems;
     ListView drawerList;
     DrawerLayout drawerLayout;
+
+    EditText searchBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,29 +230,17 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
 
     @Override
     public void onBackPressed() {
-        uiUtil.showQuitDialog();
+        if (searchBar.getVisibility() == View.VISIBLE)
+            searchBar.setVisibility(View.GONE);
+        else
+            uiUtil.showQuitDialog();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.action_toggle_seek_bar:
-//                uiUtil.toggleSeekBar();
-//                return true;
-//            case R.id.action_toggle_action_bar:
-//                uiUtil.toggleActionBar();
-//                return true;
-//            case R.id.action_toggle_adv_controls:
-//                uiUtil.toggleAdditionalButtons();
-//                return true;
-//            case R.id.action_change_player_font_color:
-//                ColorPickerDialog.newBuilder().setColor(ContextCompat.getColor(this, R.color.song_text)).show(this);
-//                return true;
-//            case R.id.action_set_timer:
-//                uiUtil.startShutdownTimer();
-//                return true;
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+            case R.id.action_search:
+                uiUtil.toggleViewVisibility(searchBar);
                 return true;
             default:
                 // Invoke the superclass to handle unrecognized action.
@@ -390,6 +373,18 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
         songDurationTextView = (TextView) findViewById(R.id.songDurationTextView);
         songProgressTextView = (TextView) findViewById(R.id.songProgressTextView);
 
+        searchBar = (EditText)findViewById(R.id.song_search);
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String text = searchBar.getText().toString();
+                adapter.getFilter().filter(text);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
         if (player.isPlaying()) {
             playbackButton.setBackground(pauseDrawable);
@@ -422,9 +417,7 @@ public class PlayerActivity extends AppCompatActivity implements ColorPickerDial
                 }
 
                 @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                }
+                public void onStopTrackingTouch(SeekBar seekBar) {}
             });
         }
     }

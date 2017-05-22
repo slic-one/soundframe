@@ -19,7 +19,7 @@
     android:singleLine="true"
 
     android:backgroundTintMode="add"
-    android:background="#111111"
+    android:backgroundTint="@color/transparent"
 
     android:clickable="true"
     android:onClick="songSelected"

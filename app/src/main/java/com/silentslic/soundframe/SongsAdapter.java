@@ -59,11 +59,10 @@ class SongsAdapter extends ArrayAdapter<Song> {
             songName.setTextColor(fontColor);
         }
 
-        Log.i("songList position", "[" + position + "]");
         if (position % 2 == 0)
-            songName.setBackgroundColor(Color.BLACK);
+            songName.setBackgroundColor(Color.parseColor("#99000000"));
         else
-            songName.setBackgroundColor(Color.parseColor("#111111"));
+            songName.setBackgroundColor(Color.parseColor("#99111111"));
 
         return convertView;
     }
